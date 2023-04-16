@@ -1,0 +1,1 @@
+git clone https://github.com/manuelparra1/astronvim_config.git ~/.config/nvim/lua/dusts
