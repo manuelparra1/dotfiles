@@ -26,7 +26,7 @@ for index, paragraph in enumerate(question_paragraphs):
 
         # Multiple choice a through d
         choice_letters = ["a", "b", "c", "d"]
-
+        
         # Extract the value attribute for each choice and print with choice_letters
         for input_element in input_elements:
             choice_text = input_element.next_sibling.strip()
