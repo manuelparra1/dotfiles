@@ -1,0 +1,10 @@
+return {
+	"pappasam/papercolor-theme-slim",
+	lazy = false,
+	priority = 1000,
+	opts = {},
+	config = function()
+		vim.cmd("set background=light")
+		vim.cmd.colorscheme("PaperColorSlim")
+	end,
+}

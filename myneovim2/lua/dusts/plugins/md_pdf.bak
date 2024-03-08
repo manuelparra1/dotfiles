@@ -1,0 +1,19 @@
+return {
+	"arminveres/md-pdf.nvim",
+	branch = "main",
+	lazy = true,
+	config = function()
+		require("md-pdf").setup({
+			margins = "1.5cm",
+			highlight = "tango",
+			toc = true,
+			preview_cmd = function()
+				return "firefox"
+			end,
+		})
+
+		vim.keymap.set("n", "<Leader>,", function()
+			require("md-pdf").convert_md_to_pdf()
+		end)
+	end,
+}
