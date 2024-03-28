@@ -4,72 +4,46 @@
 # if they don't exist, create them
 # if they do, only copy and don't
 # overwrite
-function install_config {
-    if [[ ! -d ~/.config ]]; then
-        mkdir -p ~/.config
-        cp -r .config/* ~/.config
-    else
-        # if .config contents exist in
-        # ~/.config contents, ask whether to overwrite
-        for file in ./.config/*; do
-            filename=$(basename "$file")
-            if [[ -e ~/.config/$filename ]]; then
-                echo "Overwrite $filename? [y/N]"
+dotfile_items=(.bin .config .fonts .tmux .tmux.conf .zshrc)
+
+function install_dir {
+    for item in "${dotfile_items[@]}"; do
+        # Check if item exists and is a directory
+        if [[ -d "$item" ]]; then
+            # Check if directory exists in ~
+            if [[ -d "$HOME/$item" ]]; then
+                # Prompt user to choose whether to overwrite or update
+                echo "Directory $HOME/$item already exists."
+                echo "Do you want to overwrite its contents or update it using rsync? [o/r/N]"
                 read -r ANSWER
-                if [[ "$ANSWER" == "y" ]]; then
-                    cp -r "$file" ~/.config
+                if [[ "$ANSWER" == "o" ]]; then
+                    rm -rf "$HOME/$item"  # Remove the existing directory and its contents
+                elif [[ "$ANSWER" == "r" ]]; then
+                    # Update the directory using rsync
+                    rsync -ru --append --partial "$item"/ "$HOME/$item/"
+                    continue  # Skip to the next item
+                fi
+            fi
+            # If directory doesn't exist or user chooses to overwrite, create it and copy contents
+            mkdir -p "$HOME/$item"
+            cp -r "$item"/* "$HOME/$item/"
+        else
+            # If item is a file and exists in ~, ask whether to overwrite
+            if [[ -e "$HOME/$item" ]]; then
+                echo "Overwrite $item? [y/N]"
+                read -r ANSWER
+                if [[ "$ANSWER" != "y" ]]; then
+                    continue
+                else
+                    cp "$item" "$HOME/$item"
                 fi
             else
-                cp -r "$file" ~/.config/
+                # If item is a file and doesn't exist in ~, copy it
+                cp "$item" "$HOME/$item"
             fi
-        done
-    fi
+        fi
+    done
 }
 
-# Move .fonts to ~
-# if it doesn't exist, create it
-# if it does, only copy and don't
-# overwrite
-function install_fonts {
-    if [[ ! -d ~/.fonts ]]; then
-        mkdir -p ~/.fonts
-        cp -r .fonts/* ~/.fonts
-    else
-        # if .fonts contents exist in
-        # ~/.fonts contents, ask whether to overwrite
-        for file in ./.fonts/*; do
-            filename=$(basename "$file")
-            if [[ -e ~/.fonts/$filename ]]; then
-                echo "Overwrite $filename? [y/N]"
-                read -r ANSWER
-                if [[ "$ANSWER" == "y" ]]; then
-                    cp -r "$file" ~/.fonts
-                fi
-            else
-                cp -r "$file" ~/.fonts
-            fi
-        done
-    fi
-}
-
-echo "Installing config"
-echo "Are you sure? [y/N]"
-read -r ANSWER
-if [[ "$ANSWER" != "y" ]]
-then
-    echo "Ok, bye"
-    exit 0
-else
-    install_config
-
-echo "Installing fonts"
-echo "Are you sure? [y/N]"
-read -r ANSWER
-if [[ "$ANSWER" != "y" ]]
-then
-    echo "Ok, bye"
-    exit 0
-else
-    install_fonts
-fi
-fi
+# Execute the function
+install_dir
