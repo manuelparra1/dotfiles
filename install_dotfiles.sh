@@ -21,7 +21,8 @@ function install_dir {
                 elif [[ "$ANSWER" == "r" ]]; then
                     # Update the directory using rsync
                     rsync -ru --append --partial "$item"/ "$HOME/$item/"
-                    continue  # Skip to the next item
+                else
+                    continue # Skip to the next item
                 fi
             fi
             # If directory doesn't exist or user chooses to overwrite, create it and copy contents
