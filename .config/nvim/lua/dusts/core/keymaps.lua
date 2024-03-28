@@ -3,56 +3,67 @@ vim.g.mapleader = " "
 
 local keymap = vim.keymap -- for conciseness
 
----------------------
--- General Keymaps
----------------------
-
 -- use jk to exit insert mode
-keymap.set("i", "jk", "<ESC>")
+keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 
 -- clear search highlights
-keymap.set("n", "<leader>nh", ":nohl<CR>")
+keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 
 -- delete single character without copying into register
 keymap.set("n", "x", '"_x')
 
--- increment/decrement numbers
-keymap.set("n", "<leader>+", "<C-a>") -- increment
-keymap.set("n", "<leader>-", "<C-x>") -- decrement
+-- dusts Custom Functions
 
--- window management
-keymap.set("n", "<leader>sv", "<C-w>v") -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s") -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=") -- make split windows equal width & height
-keymap.set("n", "<leader>sx", ":close<CR>") -- close current split window
+-- Convert To Title Case
+local function titleCaseVisual()
+  local start_line = vim.fn.line "'<"
+  local end_line = vim.fn.line "'>"
+  local range = string.format('%d,%ds', start_line, end_line)
+  vim.cmd(range .. '/\\(\\w\\+\\)/\\u\\L\\1/g')
+  vim.cmd 'nohlsearch'
+end
+-- Define the titleCaseVisual function in the global Lua environment
+_G.titleCaseVisual = titleCaseVisual
 
-keymap.set("n", "<leader>to", ":tabnew<CR>") -- open new tab
-keymap.set("n", "<leader>tx", ":tabclose<CR>") -- close current tab
-keymap.set("n", "<leader>tn", ":tabn<CR>") --  go to next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>") --  go to previous tab
+-- dusts Custom Keymaps
+-- Set up the key mapping for insert mode
+vim.api.nvim_set_keymap('i', 'jk', '<Esc>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', 'jkj', '<Esc>', { noremap = true, silent = true })
 
-----------------------
--- Plugin Keybinds
-----------------------
+-- move up splits
+vim.api.nvim_set_keymap('n', '<leader>k', '<C-w>k', { noremap = true, silent = true })
 
--- vim-maximizer
-keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle split window maximization
+-- move down splits
+vim.api.nvim_set_keymap('n', '<leader>j', '<C-w>j', { noremap = true, silent = true })
 
--- nvim-tree
-keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>") -- toggle file explorer
+-- move left splits
+vim.api.nvim_set_keymap('n', '<leader>h', '<C-w>h', { noremap = true, silent = true })
 
--- telescope
-keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>") -- find files within current working directory, respects .gitignore
-keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>") -- find string in current working directory as you type
-keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>") -- find string under cursor in current working directory
-keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>") -- list open buffers in current neovim instance
-keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>") -- list available help tags
+-- move right splits
+vim.api.nvim_set_keymap('n', '<leader>l', '<C-w>l', { noremap = true, silent = true })
 
--- telescope git commands (not on youtube nvim video)
-keymap.set("n", "<leader>gc", "<cmd>Telescope git_commits<cr>") -- list all git commits (use <cr> to checkout) ["gc" for git commits]
-keymap.set("n", "<leader>gfc", "<cmd>Telescope git_bcommits<cr>") -- list git commits for current file/buffer (use <cr> to checkout) ["gfc" for git file commits]
-keymap.set("n", "<leader>gb", "<cmd>Telescope git_branches<cr>") -- list git branches (use <cr> to checkout) ["gb" for git branch]
-keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<cr>") -- list current changes per file with diff preview ["gs" for git status]
+-- Change inner word and save to custom register _ (black hole register)
+vim.api.nvim_set_keymap('n', 'ciw', '"_ciw', { noremap = true, silent = true })
 
--- restart lsp server (not on youtube nvim video)
-keymap.set("n", "<leader>rs", ":LspRestart<CR>") -- mapping to restart lsp if necessary
+-- Change inner word and save to custom register _ (black hole register)
+vim.api.nvim_set_keymap('n', 'ci"', '"_ci"', { noremap = true, silent = true })
+
+-- Delete inner word and save to custom register _ (black hole register)
+vim.api.nvim_set_keymap('n', 'diw', '"_diwh', { noremap = true, silent = true })
+
+-- Delete inner word and save to custom register _ (black hole register)
+vim.api.nvim_set_keymap('n', 'di"', '"_di"h', { noremap = true, silent = true })
+
+-- Delete line and save to custom register _ (black hole register)
+vim.api.nvim_set_keymap('n', 'dd', '"_dd', { noremap = true, silent = true })
+
+-- bullet lists
+-- Add alpha format to nrformats
+vim.api.nvim_command 'set nrformats+=alpha'
+vim.keymap.set('n', '<leader>aa', '0<C-v>3j<S-I>A. <ESC>j<C-v>2jg<C-a>', { desc = 'Inserts letters and increments on 4 lines' })
+
+-- delete all matching characters, visually selected
+vim.keymap.set('x', '<leader>x', 'y:%s/<C-R>"//g<CR>', { desc = 'Delete all matching characters' })
+
+-- use convert-to-title-case function
+vim.api.nvim_set_keymap('v', '<Leader>T', ':lua titleCaseVisual()<CR>', { noremap = true, silent = true })
