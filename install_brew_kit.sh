@@ -26,7 +26,7 @@ function install_brew {
 }
 
 # `brew install` starter kit
-echo "`brew` installing starter kit for you"
+echo "\`brew\` installing starter kit for you"
 echo "Are you sure? [y/N]"
 read -r ANSWER
 if [[ "$ANSWER" != "y" ]]; then

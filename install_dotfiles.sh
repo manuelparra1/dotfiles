@@ -4,7 +4,7 @@
 # if they don't exist, create them
 # if they do, only copy and don't
 # overwrite
-dotfile_items=(.bin .config .fonts .tmux .tmux.conf .zshrc)
+dotfile_items=(.bin .config .dir_colors .fonts .tmux .tmux.conf .zshrc)
 
 function install_dir {
     for item in "${dotfile_items[@]}"; do
