@@ -1,6 +1,6 @@
 #!/bin/bash
 
-utility_list=(git nvim tmux node npm unzip fzf ripgrep fd)
+utility_list=(git nvim tmux node npm unzip fzf gnupg ripgrep fd)
 
 # Check if list of utilities exists in system
 function verify_list {
