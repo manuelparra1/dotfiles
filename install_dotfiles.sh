@@ -20,7 +20,7 @@ function install_dir {
                     rm -rf "$HOME/$item"  # Remove the existing directory and its contents
                 elif [[ "$ANSWER" == "r" ]]; then
                     # Update the directory using rsync
-                    rsync -ru --append --partial "$item"/ "$HOME/$item/"
+                    rsync -rtu --update --append --partial "$item"/ "$HOME/$item/"
                 else
                     continue # Skip to the next item
                 fi
