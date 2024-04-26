@@ -30,3 +30,5 @@ Installs Homebrew
 
 Uses a list that can be modified and will install all brew utilities.
 This script will first check if you already have the utilities installed.
+
+> Uses `rsync` to update file if they already exist.
