@@ -1,6 +1,6 @@
 export BAT_THEME="Enki-Tokyo-Night"
 
-eval $(gdircolors ~/.dir_colors)
+# eval $(gdircolors ~/.dir_colors)
 
 alias ls='ls --color=tty'
 #alias ls='ls --color=auto'
@@ -9,7 +9,7 @@ export CLICOLOR=true
 #export TERM=xterm-kitty
 
 export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTS='--preview "bat --color=always {}"'
+#export FZF_DEFAULT_OPTS='--preview "bat --color=always {}"'
 
 path+=('/Users/dusts/.bin/')
 alias chatgpt3s='chatgpt.sh --model gpt-3.5-turbo-0125 --max-tokens 250'
@@ -34,16 +34,82 @@ livegrep() {
             nvim "+normal! ${line}G" "$file"
         done
 }
-# Custom LLM ZSH Plugins
+# Custom ZSH Plugins
 source ~/.config/zsh/plugins/zsh-llm-suggestions/zsh-llm-suggestions.zsh
+
+# =================================================================================================
+# ZenSH
+# =================================================================================================
+#
+# Set the directory we want to store zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Download Zinit, if it's not there yet
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+# Source/Load zinit
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add in zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Add in snippets
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::aws
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+
+# Load completions
+autoload -Uz compinit && compinit
+
+zinit cdreplay -q
+
+# Keybindings
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '^[w' kill-region
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# Shell integrations
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
+# =================================================================================================
+# ZenSH
+# =================================================================================================
+
+# Plugin Keybinds
 bindkey '^o' zsh_llm_suggestions_openai # Ctrl + O to have OpenAI suggest a command given a English description
 bindkey '^[^o' zsh_llm_suggestions_openai_explain # Ctrl + alt + O to have OpenAI explain a command
 
-# Encryted API Key
-gpg -d ~/.bin/openai_api_key.txt.gpg > /tmp/api_key
-export OPENAI_KEY=$(cat /tmp/api_key)
-export OPENAI_API_KEY=$OPENAI_KEY
-rm /tmp/api_key
 
 # Homebrew Settings
 export CC=gcc
@@ -52,10 +118,13 @@ export LDFLAGS="-L/opt/homebrew/opt/readline/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/readline/include"
 export SPACESHIP_PROMPT_ADD_NEWLINE=false
 
-#  Settings
+# Conditional Warp Prompt
 if [[ "$TERM" == "xterm-kitty" || "$TERM" == "xterm-256color" || "$TERM_PROGRAM" == "WarpTerminal" ]]; then
-    export TERM=xterm-256color
-    eval "$(starship init zsh)"
+    # If the "vim" environment variable is not set or empty, initialize the Warp prompt
+    if [[ -z "$VIM" ]]; then
+        export TERM=xterm-256color
+        eval "$(starship init zsh)"
+    fi
 fi
 
 # >>> conda initialize >>>
