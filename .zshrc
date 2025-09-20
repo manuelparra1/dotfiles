@@ -73,30 +73,6 @@ livegrep() {
 #         done
 # }
 
-# Most Used API Keys
-export CEREBRAS_API_KEY="csk-dh6x9njdwyr44yn9nr59mppvxrkh5e3jv4hjtyy8t9pymynf"
-export GROQ_API_KEY="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"
-export GROK_API_KEY="xai-YzRrh7SwGNJYvPuiMvkUg9jQhcDayRtsscGzgEh0jLzSoxJNsoc98Rucpv3kpiSBl3yAiFXBPBznZfVM"
-export OPENROUTER_API_KEY="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"
-
-# Often Used API Keys
-export LAMBDA_API_KEY="secret_neovim-plugin_c37ab50d90b3477abfb4798afbf300c6.R8ICBMWupa9xN6yRmTpfEirEIkUU3qVb"
-
-# Backup Used API Keys
-export MISTRAL_API_KEY="ENiWDswElLFlWkRbWlohjkeQIANCVk9l"
-export CODESTRAL_API_KEY="4eU1mKRKgu41iaCoeP0jAAeoZh57uxt9"
-export DEEPSEEK_API_KEY="sk-07071c8e6c944f28a68621295ad2db7b"
-export GOOGLE_API_KEY="AIzaSyB5Im1rQPXnHASUgC_ThozlOXuaK3Kc5II"
-export GEMINI_API_KEY="AIzaSyB5Im1rQPXnHASUgC_ThozlOXuaK3Kc5II"
-export GLHF_API_KEY="glhf_9bd66846c042fd65399a404e2a34a9f6"
-export PICO_API_KEY="H7altDwy3OqjN4jihomckmKv5MpHZ3sf7VcUinyR+RQkncrTiPhKqw=="
-export HUGGINGFACE_API_KEY="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"
-export GITHUB_TOKEN="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"
-export OLLAMA_API_KEY="ollama"
-
-export OPENAI_KEY="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"
-export OPENAI_API_KEY=$OPENAI_KEY
-
 # =================================================================================================
 # ZenSH
 # =================================================================================================
