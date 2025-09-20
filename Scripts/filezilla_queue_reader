@@ -1,0 +1,18 @@
+#!/home/dusts/.miniconda3/bin/python3
+
+import xml.etree.ElementTree as ET
+import sys
+
+
+def parse_xml(file_path):
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+    for elem in root.iter("RemoteFile"):
+        print(elem.text)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: filezilla_queu_reader <file_path>")
+        sys.exit(1)
+    parse_xml(sys.argv[1])

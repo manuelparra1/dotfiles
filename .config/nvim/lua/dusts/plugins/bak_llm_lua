@@ -1,0 +1,1056 @@
+return {
+	"melbaldove/llm.nvim",
+	dependencies = { "nvim-neotest/nvim-nio", "nvim-lua/plenary.nvim" },
+	config = function()
+		local llm = require("llm")
+		local Job = require("plenary.job")
+		local vim = vim
+
+		local service_lookup = {
+			openai = {
+				url = "https://api.openai.com/v1/chat/completions",
+				-- model = "gpt-4.1-nano",
+				-- Pricing
+				-- ---------------------------
+				-- $0.40/$0.60 vs.
+				-- ---------------------------
+				-- (gpt-4o-mini $0.15/$0.60)
+				-- (mistral-small $0.10/$0.30)
+				-- (nemotron-super $0.13/$0.40)
+				-- (Flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				model = "gpt-4o-mini",
+				-- model = "gpt-4.1-mini",
+				api_key_name = "OPENAI_API_KEY",
+			},
+			perplexity = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "perplexity/sonar-pro",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			grok = {
+				url = "https://api.x.ai/v1/chat/completions",
+				-- Pricing
+				-- ---------------------------
+				-- $0.30/$0.50 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (Mistral Small $0.10/$0.30)
+				-- (nemotron-super $0.13/$0.40)
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				model = "grok-3-mini-latest",
+				--model  = "grok-3-mini-fast-latest",
+				--model = "grok-3-latest",
+				--model = "grok-3-fast-latest",
+				api_key_name = "GROK_API_KEY",
+			},
+			meta = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "meta-llama/llama-3.2-1b-instruct",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			qwen3 = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "qwen/qwen3-8b",
+				-- model = "qwen/qwen3-14b:free",
+				-- model = "qwen/qwen3-32b:free",
+				-- model = "qwen/qwen3-30b-a3b",
+				-- model = "qwen/qwen3-235b-a22b:free",
+				--
+				-- $0.10/$0.30 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (Mistral Small $0.10/$0.30)
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				--
+				-- model = "qwen/qwen3-32b",
+				--
+				-- $0.07/$0.24 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				--
+				-- model = "qwen/qwen3-14b",
+				--
+				-- $0.035/$0.138 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- ===========================
+				--
+				-- model = "qwen/qwen3-8b",
+				--
+				-- ---------------------------
+				-- $0.10/$0.30 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				--
+				-- model = "qwen/qwen3-30b-a3b",
+				--
+				-- ---------------------------
+				-- $0.15/$0.60 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				--
+				-- model = "qwen/qwen3-235b-a22b",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			openrouter = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				-- Pricing
+				-- ---------------------------
+				-- $0.07/$0.35 vs.
+				-- ---------------------------
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				-- model = "microsoft/phi-4-reasoning:free",
+				-- model = "meta-llama/llama-3.3-8b-instruct:free",
+				model = "meta-llama/llama-3.3-70b-instruct:free",
+				-- model = "rekaai/reka-flash-3:free",
+				-- model = "deepseek/deepseek-r1:free",
+				-- model = "google/gemma-3-27b-it",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			lambda = {
+				url = "https://api.lambdalabs.com/v1/chat/completions",
+				model = "llama-4-maverick-17b-128e-instruct-fp8",
+				-- model = "llama-4-scout-17b-16e-instruct",
+				-- model = "hermes3-405b",
+				api_key_name = "LAMBDA_API_KEY",
+				headers = { -- Add this if needed
+					["Content-Type"] = "application/json",
+					["Accept"] = "text/event-stream",
+				},
+			},
+			deepcoder = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "agentica-org/deepcoder-14b-preview:free",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			flash = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				-- Pricing
+				-- ---------------------------
+				-- $0.15/$0.60 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (Mistral Small $0.10/$0.30)
+				-- (4.1-nano $0.10/$0.40)
+				-- (qwen3-235b-a22b $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- (4.1-mini $0.40/$0.60)
+				-- ===========================
+				-- model = "google/gemini-2.5-flash-preview-05-20",
+				model = "google/gemini-2.5-flash-lite-preview-06-17",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			gemini = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				-- Pricing
+				-- ---------------------------
+				-- $1.25/$10.00 vs.
+				-- ---------------------------
+				-- (gpt-4.1 $2.00/$8.00)
+				-- (o4-mini $1.10/$4.40)
+				-- (mistral-medium $0.40/$2.00)
+				-- (grok-3 $3.00/$10.00)
+				-- (claude-3.7-sonnet $3.00/$15.00)
+				-- ===========================
+				--
+				model = "google/gemini-2.5-pro-preview",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			groq = {
+				url = "https://api.groq.com/openai/v1/chat/completions",
+				model = "meta-llama/llama-4-scout-17b-16e-instruct",
+				-- model = "meta-llama/llama-4-maverick-17b-128e-instruct",
+				-- model = "llama-3.2-11b-text-preview",
+				-- model = "llama-3.2-3b-preview",
+				-- model = "llama-3.3-70b-versatile",
+				-- model = "deepseek-r1-distill-llama-70b",
+				-- model = "qwen-qwq-32b",
+				-- model = "llama-3.1-8b-instant",
+				api_key_name = "GROQ_API_KEY",
+			},
+			devstral = {
+				url = "https://api.mistral.ai/v1/chat/completions",
+				-- model = "devstral-small-latest",
+				model = "ministral-3b-latest",
+				api_key_name = "MISTRAL_API_KEY",
+			},
+			mistral = {
+				url = "https://api.mistral.ai/v1/chat/completions",
+				-- $0.15/$0.15
+				-- ===========================
+				-- model = "open-mistral-nemo",
+				--
+				-- $2.00/$6.00 ($2/$8 for gpt-4.1)
+				-- ===============================
+				-- model = "mistral-large-latest",
+				--
+				-- ===========================
+				model = "mistral-small-latest",
+				-- $0.10/$0.30 vs.
+				-- ===========================
+				-- (4.1-nano $0.10/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ---------------------------
+				--
+				-- ================================
+				-- Price $0.10/$0.30
+				-- ================================
+				-- model = "devstral-small-latest",
+				-- --------------------------------
+				api_key_name = "MISTRAL_API_KEY",
+			},
+			gemma = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				api_key_name = "OPENROUTER_API_KEY",
+				-- model = "google/gemma-3-1b-it:free",
+				-- model = "google/gemma-3-4b-it:free",
+				model = "google/gemma-3-4b-it",
+				-- model = "google/gemma-3-12b-it:free",
+				-- model = "google/gemma-3-12b-it",
+				-- model = "google/gemma-3-27b-it:free",
+				-- model = "google/gemma-3-27b-it",
+				--
+				-- Try later, no response yet
+				-- model = "google/gemma-3n-e4b-it:free",
+				--
+				-- Pricing
+				-- ---------------------------
+				-- $0.10/$0.20 vs.
+				-- ---------------------------
+				-- (Phi4 $0.07/$0.14)
+				-- (Mistral Small $0.10/$0.30)
+				-- (4.1-nano $0.10/$0.40)
+				-- (nemotron-super $0.13/$0.40)
+				-- (4.1-mini $0.40/$0.60)
+				-- (flash $0.15/$0.60)
+				-- (grok-3-mini $0.30/$0.50)
+				-- ===========================
+				-- model = "google/gemma-3-27b-it",
+			},
+			r1 = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				-- ===============================================
+				-- Cost = $0.05/$0.10
+				-- ===============================================
+				model = "deepseek/deepseek-r1-0528-qwen3-8b:free",
+				-- -----------------------------------------------
+				--
+				-- ===============================================
+				-- Cost = $0.10/$0.20
+				-- ===============================================
+				-- model = "deepseek/deepseek-r1-distill-qwen-7b",
+				-- -----------------------------------------------
+				--
+				-- model = "deepseek/deepseek-r1:free",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			codestral = {
+				url = "https://codestral.mistral.ai/v1/chat/completions",
+				model = "codestral-latest",
+				api_key_name = "CODESTRAL_API_KEY",
+			},
+			cerebras = {
+				url = "https://api.cerebras.ai/v1/chat/completions",
+				-- model = "llama-4-scout-17b-16e-instruct",
+				-- model = "llama-3.3-70b",
+				model = "qwen-3-32b",
+				api_key_name = "CEREBRAS_API_KEY",
+			},
+			nemotron_ultra = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				-- model = "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+				model = "nvidia/llama-3.3-nemotron-super-49b-v1:free",
+				-- model = "nvidia/llama-3.1-nemotron-nano-8b-v1:free",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			nemotron = {
+				url = "https://api.lambdalabs.com/v1/chat/completions",
+				model = "llama3.1-nemotron-70b-instruct",
+				api_key_name = "LAMBDA_API_KEY",
+				headers = { -- Add this if needed
+					["Content-Type"] = "application/json",
+					["Accept"] = "text/event-stream",
+				},
+			},
+			deepseek = {
+				url = "https://api.deepseek.com/v1/chat/completions",
+				model = "deepseek-chat",
+				-- model = "deepseek-reasoner",
+				api_key_name = "DEEPSEEK_API_KEY",
+			},
+			ollama_code = {
+				url = "http://10.0.0.103:11434/v1/chat/completions",
+				model = "qwen2.5-coder:14b",
+				api_key_name = "OLLAMA_API_KEY",
+			},
+			ollama_notes = {
+				-- url = "http://10.0.0.103:11434/v1/chat/completions",
+				url = "http://127.0.0.1:11434/v1/chat/completions",
+				-- model = "qwen3:8b",
+				model = "qwen3:0.6b",
+				api_key_name = "OLLAMA_API_KEY",
+			},
+		}
+
+		local system_prompt = [[
+            You are an AI programming assistant integrated into a code editor. Your purpose is to help the user with programming tasks as they write code.
+            Key capabilities:
+            - Thoroughly analyze the user's code and provide insightful suggestions for improvements related to best practices, performance, readability, and maintainability. Explain your reasoning.
+            - Answer coding questions in detail, using examples from the user's own code when relevant. Break down complex topics step-by-step.
+            - Spot potential bugs and logical errors. Alert the user and suggest fixes.
+            - Upon request, add helpful comments explaining complex or unclear code.
+            - Suggest relevant documentation, StackOverflow answers, and other resources related to the user's code and questions.
+            - Engage in back-and-forth conversations to understand the user's intent and provide the most helpful information.
+            - Keep responses concise and use markdown formatting where appropriate.
+            - When asked to create code, only generate the code without any explanations.
+            - Think step by step.
+        ]]
+
+		local system_prompt_replace = [[
+            Follow the instructions in the code comments annotated with `--`. Generate code only. Think step by step.
+            If you must speak, do so in comments annotated with `--`. Generate valid code only.
+        ]]
+
+		local note_system_prompt = [[
+            You are an AI assistant helping with note editing and formatting.
+            Use the selected text as context.
+            Follow the last instruction (last line with `>`) which is comments 
+            annotated with `>`.
+            Perform the requested task precisely and concisely.
+            Generate valid content only.
+
+            - Focus on providing exactly what the user asks for, nothing more.
+            - Do not include explanations, introductions, or additional content
+              unless explicitly requested.
+            - Do not include prefixes like `//` or comments in your response.
+            - Keep responses brief and directly address the user's instruction.
+        ]]
+		local perplexity_system_prompt = [[
+            You are an AI assistant helping with note editing and formatting.
+            Use the selected text as context.
+            Follow the last instruction (last line with `>`) which is comments 
+            annotated with `>`.
+            Perform the requested task precisely and concisely.
+            Generate valid content only.
+
+            - Focus on providing exactly what the user asks for, nothing more.
+            - Do not include explanations, introductions, or additional content
+              unless explicitly requested.
+            - Do not include prefixes like `//` or comments in your response.
+            - Keep responses brief and directly address the user's instruction.
+
+            Act as a knowledgeable AI assistant that integrates web search results using Perplexity.
+            Respond to user queries as if you were a knowledgeable expert in the field, always
+            providing sources for your claims. Conduct real-time web searches to gather relevant
+            information and then aggregate the results into concise, structured, and informative
+            answers that address the main points of the question. Engage in active listening,
+            utilize chain-of-thought prompting, and provide inline citations and context for further
+            exploration. Utilize fine-tuning and multiple examples to refine the results. Additionally,
+            include a section of the relevant web sources cited at the end of each response,
+            providing users with a list of credible sources for further reading. Finally,
+            provide a section of related questions that users might have, along with brief answers
+            to these questions, to facilitate deeper understanding and exploration of the topic.
+        ]]
+		local code_system_prompt = [[
+            You are a code generation AI. Output only raw, executable code.
+            Rules:
+            1. NEVER use markdown formatting or backticks
+            2. NEVER wrap code in ```code blocks```
+            3. Output ONLY the exact code requested
+            4. Use the specified comment syntax for any necessary comments
+            5. Match the style of surrounding code
+            6. No explanations or text outside of code comments
+            7. No markdown, no formatting, just raw code
+        ]]
+		local title_spiel_prompt = [[
+
+            You are provided with markdown content. Instead of regenerating
+            the entire document, check if any of the following are missing
+            and output only those missing elements as separate markdown lines:
+
+            1. **Title:** If there is no main title (a line starting with
+            `#`), generate a concise title (under 5 words) that captures
+            the main idea.
+
+            2. **Subtitle:** If there is no subtitle (a blockquote line
+            starting with `>`) immediately after the title, generate a
+            brief subtitle (under 8 words).
+
+            3. **Spiel:** If there is no introductory spiel following the
+            subtitle, generate a one-sentence spiel. The spiel must be conversational
+            yet technical, with a professional tone suitable for an interview.
+            It should describe the main topic ({{TOPIC}}) along with its key
+            features and purpose—as if answering questions like 
+            "what do you know about {{TOPIC}}", "what is {{TOPIC}}", or
+            "what have you worked with in relation to {{TOPIC}}".
+
+            Output only the missing elements without reproducing the rest of the content.
+            **Important** output the raw markdown. Do not encase in code blocks.
+    ]]
+		local clean_concatenated_lines_prompt = [[
+            You are provided with a line of text. Split the provided text into
+            separate lines and make it a capital alphabetic lettered bullet list
+            (e.g., `A.`, `B.`, etc). 
+
+            Don't capitalize the original text. Just the bullet list leading letters.
+            
+            Please follow the original order from left to right of the text when
+            creating the list.
+
+            Only respond with the transformed text.
+    ]]
+		local clean_markdown_prompt = [[
+      1. **Remove Bold Sections:**
+        Convert any bold title that are in lists that could be converted 
+        to standard practice markdown syntax sub-headings
+        (e.g., `##`, `###`, etc)
+      2. **Concise Title:**
+        If there is no main (`#`) title create one that is to the point
+        (so as close to under 5 words as possible) and captures main idea
+        of the notes. Any missing context will be covered by the main
+        subtitle.
+      3. **The Main Subtitle:**
+        if missing a main subtitle inside a blockquote (`>`)  below the 
+        main title (inside a main heading `#`) create a short descriptive
+        subtitle ( under 8 words) and place in markdown syntax blockquote
+        `>` below the main title and above the "spiel".
+      4. **Spiel:**
+        after the main subtitle (which is inside a blockquote `>`) create a
+        new paragraph which will be the spiel using this structure:
+          - gather main topic from the notes
+
+        {1 sentence (if possible) conversational, yet technical, for an
+        interview, professional tone spiel of {{TOPIC}} and it's key features
+        and purpose for them. (as if asked "what do you know about {{TOPIC}}",
+        "What you worked with {{TOPIC}} or "what is {{TOPIC}}" then it would be
+        possible to respond with this spiel as an answer to a probing question
+        into my experience and job history}
+      5. **Original Content:** 
+        use original content provided but do not reword or summarize. If
+        necessary restructure the content to improve readability with 
+        sub-headings and necessary organization typical of markdown syntax
+        best practice.
+      6. **Improve Markdown Structure:**  
+         - Ensure that the main title is a top-level header using `#`  
+         - Use subheading levels (e.g., `##`, `###`) appropriately to
+           structure the main body content.
+         - If necessary convert large lists and bullet points with long senteces
+           into subsections with their own subheading to improve readability
+         - If there are multiple nested lists use standard practice markdown
+           to organize into appriate sub-headings for readability
+      7. **Preserve Content Integrity:** 
+          Do not summarize, but do keep all text, descriptions, and lists,
+          and format them using best-practice markdown (e.g., use block
+          quotes for descriptive text when the language suggests it is
+          giving a tip, quoting, or noting,etc).
+
+      The main goal is to improve readability, create easy fast, and digestability,
+      but not reword or remove content.
+    ]]
+		local clean_scraped_markdown_prompt = [[
+        You are provided with a markdown document generated from an HTML scraper.
+        Transform the document as follows:
+
+        1. **Remove Useless Navigation:**
+
+          - Delete any navigation content (e.g. table of contents, numbered lists, or
+            links like "[Home](/)", "[PAN-OS](/content/techdocs/...)") that does not
+            belong to the main content.
+
+        2. **Process Image References:**
+
+          Remove all full image paths. For every image reference, extract only the base
+          image file name and replace its path with a local destination (`./images/`).
+
+          *Example:*
+          `![Filter icon](/content/dam/techdocs/en_US/images/icons/css/filter.svg)`
+
+          should become:
+
+          `![](./images/filter.svg)`
+
+          *Example 2:*
+
+          `[![](./images/track_lab1.png "Track_Lab")](https://linkstate.wordpress.com/wp-content/uploads/2011/07/track_lab1.png)`
+
+          should become:
+
+          `![track_lab1.png](./images/track_lab1.png)`
+
+        3. **Improve Markdown Structure:**  
+
+          - Ensure that the main title is a top-level header using `#`  
+          - Use nested header levels (e.g., `##`, `###`) appropriately to structure the
+            content. 
+
+        4. **Preserve Content Integrity:**
+
+          - Do not summarize, but do keep all text, descriptions, and lists, and format
+            them using best-practice markdown (e.g., use block quotes for descriptive
+            text when the language suggests it is giving a tip, quoting, or noting,etc).
+
+        5. **Extra Clean-Up:**
+
+          - Remove author information, article date, about the author footer info.
+
+        5a. **remove hardcoded new lines:**
+
+          - if paragraphs are cut off with new lines to wrap text please join into one line instead.
+
+        **Important:** Do not remove or modify the final line that starts with `> Source:`.
+        Ensure that this source attribution remains exactly as is at the bottom of the
+        transformed markdown.
+      ]]
+		-- ==========================================================================
+		-- Custom Plugin Setup
+		-- ==========================================================================
+		local function get_comment_syntax()
+			local ft = vim.bo.filetype
+			local comment_markers = {
+				lua = "--",
+				python = "#",
+				cisco = "!",
+				javascript = "//",
+				typescript = "//",
+				java = "//",
+				cpp = "//",
+				c = "//",
+				rust = "//",
+				go = "//",
+			}
+			return comment_markers[ft] or "#"
+		end
+
+		llm.setup({
+			system_prompt = system_prompt,
+			system_prompt_replace = system_prompt_replace,
+			services = service_lookup,
+		})
+
+		local function write_string_at_cursor(str)
+			local current_window = vim.api.nvim_get_current_win()
+			local cursor_position = vim.api.nvim_win_get_cursor(current_window)
+			local row, col = cursor_position[1], cursor_position[2]
+
+			local lines = vim.split(str, "\n")
+			vim.api.nvim_put(lines, "c", true, true)
+
+			local num_lines = #lines
+			local last_line_length = #lines[num_lines]
+			vim.api.nvim_win_set_cursor(current_window, { row + num_lines - 1, col + last_line_length })
+		end
+
+		local function process_data_lines(line, service, process_data)
+			local json = line:match("^data: (.+)$")
+			if json then
+				if json == "[DONE]" then
+					return true
+				end
+				local data = vim.json.decode(json)
+				vim.schedule(function()
+					vim.cmd("undojoin")
+					process_data(data)
+				end)
+			end
+			return false
+		end
+
+		local function process_sse_response(buffer, service)
+			process_data_lines(buffer, service, function(data)
+				local content
+				if data.choices and data.choices[1] and data.choices[1].delta then
+					content = data.choices[1].delta.content
+				end
+				if content and content ~= vim.NIL then
+					write_string_at_cursor(content)
+				end
+			end)
+		end
+
+		function llm.prompt_selection_only(opts)
+			local replace = opts.replace
+			local service = opts.service
+			local visual_lines = llm.get_selection()
+			if not visual_lines then
+				print("No selection found")
+				return
+			end
+
+			local prompt_text = table.concat(visual_lines, "\n")
+			local comment_syntax = opts.comment_syntax or ">"
+
+			-- Store the instructions intended for the USER prompt
+			local instructions = opts.system_prompt or note_system_prompt
+
+			-- === NEW: Get thinking mode setting ===
+			local thinking_mode = opts.thinking_mode or "off" -- Default to "off" if not specified
+
+			-- Handle positioning before making the API call
+			if replace then
+				vim.api.nvim_command("normal! d")
+				vim.api.nvim_command("normal! k")
+				vim.api.nvim_command("normal! o")
+			else
+				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", false, true, true), "nx", false)
+				local end_mark = vim.fn.getpos("'>")
+				local row = end_mark[2]
+				local col = end_mark[3]
+				local current_window = vim.api.nvim_get_current_win()
+				vim.api.nvim_win_set_cursor(current_window, { row, col })
+				vim.api.nvim_command("normal! o")
+			end
+
+			local found_service = service_lookup[service]
+			if not found_service then
+				print("Invalid service: " .. service)
+				return
+			end
+
+			local url = found_service.url
+			local api_key_name = found_service.api_key_name
+			local model = found_service.model
+			local api_key = api_key_name and os.getenv(api_key_name)
+
+			local data = {} -- Initialize data structure
+			local api_params = { -- Common API parameters
+				model = model,
+				stream = true,
+				max_tokens = opts.max_tokens or 8000, -- Keep consistent max_tokens
+				stop = opts.stop or nil,
+			}
+
+			-- === NEMOTRON SPECIFIC LOGIC ===
+			if service == "nemotron_ultra" then
+				-- Construct the system prompt content based on thinking_mode
+				local system_content = string.format("detailed thinking %s", thinking_mode)
+				-- Combine instructions and selection for the user prompt
+				local final_user_prompt = instructions .. "\n\n---\n\n" .. prompt_text
+
+				data.messages = {
+					{
+						role = "system",
+						content = system_content, -- Use the specific control phrase
+					},
+					{
+						role = "user",
+						content = final_user_prompt, -- Instructions + selection
+					},
+				}
+				-- Set recommended parameters based on thinking mode
+				if thinking_mode == "on" then
+					api_params.temperature = opts.temperature or 0.6 -- Recommended for thinking ON
+					api_params.top_p = opts.top_p or 0.95 -- Recommended for thinking ON
+				else -- thinking_mode is "off" or default
+					api_params.temperature = opts.temperature or 0.0 -- Recommended for thinking OFF (greedy)
+					-- top_p is usually ignored when temperature is 0, but doesn't hurt to omit or set to 1
+					api_params.top_p = nil -- Explicitly remove top_p for greedy decoding if API requires
+				end
+
+			-- === DEFAULT LOGIC FOR OTHER SERVICES ===
+			else
+				-- Modify prompt based on whether it's code or notes (if needed)
+				if instructions == code_system_prompt then
+					prompt_text = string.format("Using %s for comments, respond to: %s", comment_syntax, prompt_text)
+				end
+
+				data.messages = {
+					{
+						role = "system",
+						content = instructions, -- Use the passed instructions as system prompt
+					},
+					{
+						role = "user",
+						content = prompt_text, -- Use selection as user prompt
+					},
+				}
+				-- Use default/passed temperature for other models
+				api_params.temperature = opts.temperature or 0.3
+				api_params.top_p = opts.top_p -- Pass through if provided
+			end
+			-- =================================
+
+			-- Merge API parameters into the main data payload
+			for k, v in pairs(api_params) do
+				data[k] = v
+			end
+
+			local args = {
+				"-N",
+				"-X",
+				"POST",
+				"-H",
+				"Content-Type: application/json",
+				"-d",
+				vim.json.encode(data),
+			}
+
+			-- Add Authorization and other headers (logic remains the same)
+			if api_key then
+				if found_service.headers then
+					for k, v in pairs(found_service.headers) do
+						table.insert(args, "-H")
+						table.insert(args, k .. ": " .. v)
+					end
+				end
+				table.insert(args, "-H")
+				table.insert(args, "Authorization: Bearer " .. api_key)
+				if service == "anthropic" then
+					table.insert(args, "-H")
+					table.insert(args, "x-api-key: " .. api_key)
+					table.insert(args, "-H")
+					table.insert(args, "anthropic-version: 2023-06-01")
+				end
+			end
+
+			table.insert(args, url)
+
+			-- Manage active job (logic remains the same)
+			local current_active_job = nil
+			if current_active_job then
+				current_active_job:shutdown()
+				current_active_job = nil
+			end
+
+			current_active_job = Job:new({
+				command = "curl",
+				args = args,
+				on_stdout = function(_, out)
+					process_sse_response(out, service)
+				end,
+				-- on_stderr = function(_, err)
+				-- if err and #err > 0 then
+				-- print("LLM Error: " .. err)
+				-- end
+				-- end,
+				on_exit = function()
+					current_active_job = nil
+				end,
+			})
+
+			current_active_job:start()
+		end
+
+		-- Ensure the append helper still calls the main function
+		function llm.prompt_selection_only_append(opts)
+			opts.replace = false
+			llm.prompt_selection_only(opts)
+		end
+		-- ==========================================================================
+		-- Keybinds
+		-- ==========================================================================
+		--
+		-- Note-related keybindings
+		-- --------------------------------------------------------------------------
+		--
+		-- Append LLM response after selection
+		--
+		vim.keymap.set("v", "<leader>nt", function()
+			llm.prompt_selection_only_append({
+				service = "openai",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append LLM response after selection (notes)" })
+		--
+		-- Append Perplexity Response after selection
+		--
+		vim.keymap.set("v", "<leader>px", function()
+			llm.prompt_selection_only_append({
+				service = "perplexity",
+				-- system_prompt = "",
+				-- system_prompt = note_system_prompt,
+				system_prompt = perplexity_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Perplexity Response after selection (notes)" })
+		--
+		-- Append Gemini Flash response after selection
+		--
+		vim.keymap.set("v", "<leader>nf", function()
+			llm.prompt_selection_only_append({
+				service = "flash",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Gemini Flash response after selection (notes)" })
+		--
+		-- Append Qwen response after selection
+		--
+		vim.keymap.set("v", "<leader>nw", function()
+			llm.prompt_selection_only_append({
+				service = "qwen3",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Qwen response after selection (notes)" })
+		--
+		-- Append Grok response after selection
+		--
+		vim.keymap.set("v", "<leader>nk", function()
+			llm.prompt_selection_only_append({
+				service = "grok",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Grok 3 Mini response after selection (notes)" })
+		--
+		-- Append Gemini Response after selection
+		vim.keymap.set("v", "<leader>ng", function()
+			llm.prompt_selection_only_append({
+				service = "gemini",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Gemini Pro 2.5 response after selection" })
+		--
+		-- Append Gemma3 response after selection
+		--
+		vim.keymap.set("v", "<leader>ne", function()
+			llm.prompt_selection_only_append({
+				service = "gemma",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Gemma3 response after selection (notes)" })
+		--
+		-- Append Deepseek note response
+		--
+		vim.keymap.set("v", "<leader>nd", function()
+			llm.prompt_selection_only_append({
+				service = "r1",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Deepseek R1 (Qwen3 8B) response after selection" })
+		--
+		-- Append OpenRouter response after selection
+		--
+		vim.keymap.set("v", "<leader>no", function()
+			llm.prompt_selection_only_append({
+				service = "openrouter",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append OpenRouter (Llama 3.3 8B) response after selection (notes)" })
+		--
+		-- Append Mistral response after selection
+		vim.keymap.set("v", "<leader>nm", function()
+			llm.prompt_selection_only_append({
+				service = "mistral",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Mistral Small response after selection (notes)" })
+		--
+		-- Append Lambda response after selection
+		--
+		vim.keymap.set("v", "<leader>nl", function()
+			llm.prompt_selection_only_append({
+				service = "lambda",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Lambda response after selection (notes)" })
+		--
+		-- Append Nemotron response after selection
+		--
+		vim.keymap.set("v", "<leader>nn", function()
+			llm.prompt_selection_only_append({
+				service = "nemotron_ultra",
+				thinking_mode = "off",
+				system_prompt = note_system_prompt,
+				temperature = 0,
+				-- top_p = 0.95,
+				-- temperature = 0.6,
+				-- top_p = 0.95,
+			})
+		end, { desc = "Append Nemotron Ultra / Super response after selection (notes)" })
+		--
+		-- Append Cerebras response after selection
+		--
+		vim.keymap.set("v", "<leader>nc", function()
+			llm.prompt_selection_only_append({
+				service = "cerebras",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Cerebras (Qwen3-32B) response after selection" })
+		--
+		-- Append Groq response after selection
+		--
+		vim.keymap.set("v", "<leader>nq", function()
+			llm.prompt_selection_only_append({
+				service = "groq",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Groq response after selection (notes)" })
+		--
+		-- Replace selection with LLM response
+		--
+		vim.keymap.set("v", "<leader>nr", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "mistral",
+				system_prompt = note_system_prompt,
+				temperature = 0.5,
+			})
+		end, { desc = "Replace selection with LLM response (notes)" })
+		--
+		-- Append LLM code response after selection
+		-- ----------------------------------------
+		--
+		-- Append selection with LLM code response
+		vim.keymap.set("v", "<leader>ct", function()
+			llm.prompt_selection_only_append({
+				service = "codestral",
+				system_prompt = code_system_prompt,
+				temperature = 0.1, -- Lower temperature for more deterministic code
+				comment_syntax = get_comment_syntax(),
+			})
+		end, { desc = "Append LLM code response after selection" })
+		--
+		-- Replace selection with LLM code response
+		--
+		vim.keymap.set("v", "<leader>cr", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "codestral",
+				system_prompt = code_system_prompt,
+				temperature = 0.1, -- Lower temperature for more deterministic code
+				comment_syntax = get_comment_syntax(),
+			})
+		end, { desc = "Replace selection with LLM code response" })
+		-- ========================================================================
+		-- S P E C I A L
+		-- ========================================================================
+		--
+		-- Generate a title, subtitle, and spiel
+		vim.keymap.set("v", "<leader>mt", function()
+			llm.prompt_selection_only_append({
+				service = "flash",
+				system_prompt = title_spiel_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Provide a title, subtitle, and spiel" })
+		--
+		-- Clean Concatenated Lines
+		vim.keymap.set("v", "<leader>sp", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "meta",
+				system_prompt = clean_concatenated_lines_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean Concatenated Lines" })
+		--
+		-- CLEAN
+		-- =====
+		--
+		-- SCRAPED
+		-- ------------------------------------------------------------------------
+		--Clean Scraped LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>msf", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "flash",
+				system_prompt = clean_scraped_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean Scraped Markdown Content w/ Gemini Flash" })
+		--
+		--Clean Scraped LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>msg", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "grok",
+				system_prompt = clean_scraped_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean Scraped Markdown Content w/ Grok 3" })
+		--
+		--Clean Scraped LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>mso", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "openai",
+				system_prompt = clean_scraped_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean Scraped Markdown Content w/ GPT 4.1 Nano" })
+		--
+		-- OUTPUT
+		-- ------------------------------------------------------------------------
+		--Clean LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>mck", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "grok",
+				system_prompt = clean_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean LLM Output Markdown for Readability w/ Grok 3" })
+		--
+		--Clean LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>mco", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "openai",
+				system_prompt = clean_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean LLM Output Markdown for Readability w/ GPT 4.1 Nano" })
+		--
+		-- Clean LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>mcg", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "grok",
+				system_prompt = clean_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean LLM Output Markdown for Readability w/ Grok 3" })
+		--
+		-- Clean LLM Markdown with Best Practice Syntax
+		vim.keymap.set("v", "<leader>mcf", function()
+			llm.prompt_selection_only({
+				replace = true,
+				service = "flash",
+				system_prompt = clean_markdown_prompt,
+				temperature = 0.6,
+			})
+		end, { desc = "Clean LLM Output Markdown for Readability w/ Gemini Flash" })
+		--
+	end,
+}

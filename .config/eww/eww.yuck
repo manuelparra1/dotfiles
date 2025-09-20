@@ -1,0 +1,175 @@
+(defwidget bar []
+  (centerbox :orientation "h"
+    (workspaces)
+    (music)
+    (cool_info)
+  ))
+
+(defvar volume_reveal false)
+(defvar ws_hovered_id 0)
+(defvar ws_hover_1 false)
+(defvar ws_hover_2 false)
+(defvar ws_hover_3 false)
+(defvar ws_hover_4 false)
+(defvar ws_hover_5 false)
+(defvar ws_hover_6 false)
+(defvar ws_hover_7 false)
+(defvar ws_hover_8 false)
+(defvar ws_hover_9 false)
+(defvar ws_hover_10 false)
+
+(defpoll THE_CALENDAR :interval "12h" "cal")
+(defpoll CURRENT_SSID :interval "1h" "scripts/get_ssid.sh")
+(defpoll CURRENT_TIME_ZONE :interval "24h" "date +%Z")
+
+(defwidget volume []
+  (eventbox :onhover "eww update volume_reveal=true"
+            :onhoverlost "eww update volume_reveal=false"
+    (box :class "volume-widget" :orientation "h" :spacing 4 :space-evenly false
+      (button :class "volume-icon"
+              :onclick "scripts/toggle_mute.sh"
+              "")
+      (revealer :reveal volume_reveal
+                :transition "slideleft"
+                :duration "350ms"
+        (scale  :class "volume-bar"
+                ;; :hexpand true
+                ;; :active true
+                ;; :width 100
+                :value {volume ?: 0}
+                :orientation "h"
+                :tooltip "${volume ?: 0}%"
+                :max 100 
+                :min 0
+                :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")))))
+
+(defvar show_wifi_menu false)
+
+(defwidget wifi_tray []
+  (eventbox
+    :onhover "eww update wifi_tray_hovered=true"
+    :onhoverlost "eww update wifi_tray_hovered=false"
+    :onclick "scripts/toggle_wifi_menu.sh"
+    :tooltip "${CURRENT_SSID}"
+    (box :class "wifi-icon" "󰤨")))
+
+(defwindow wifi_menu_window []
+  :monitor 0
+  :geometry (geometry 
+    :x "40px" 
+    :y "10px" 
+    :width "100px"
+    :height "100px"
+    :anchor "top right")
+  :stacking "fg"
+  :focusable false
+  (wifi_menu_widget))
+
+(defpoll WIFI_LIST :interval "10s" "scripts/list_wifi.sh")
+
+(defwidget wifi_menu_widget []
+  (box :class "wifi_menu" :orientation "v" :heigh 1 :spacing 1
+    (label :text "WiFi Networks")
+    (for net in WIFI_LIST
+      (button
+        :class (if {net["active"]} "wifi_active" "wifi_inactive")
+        :onclick (format "scripts/connect_wifi.sh \"%s\" \"%s\" \"%s\"" {net["ssid"]} {net["chan"]} {net["security"]})
+        (box :orientation "h" :spacing 2 :space-evenly false :halign "start"
+          (label :text {net["ssid"]} :xalign 0.0 :style "min-width: 120px")
+          (label :text (format "Ch%s" {net["chan"]}))
+          (label :text (format "%d%%" {net["signal"]}))
+          (label :text {net["security"]}))))
+    (button :onclick "nmcli radio wifi off" :halign "start" "Disable WiFi")
+    (button :onclick "nmcli radio wifi on" :halign "start" "Enable WiFi")
+    (button :onclick "nm-connection-editor" :halign "start" "Edit Connections")
+    (box :orientation "h" :halign "fill"
+      (box :class "thin_separator" :height 1 :hexpand true))
+  ))
+
+(defwidget time []
+  (eventbox
+  :onclick "eww open --toggle the_calendar_window"
+  :tooltip "${CURRENT_TIME_ZONE}"
+  (box :class "clock" time)))
+
+(defwidget cool_info []
+  (box :class "cool_info" :orientation "h" :space-evenly false :halign "end"
+    (metric :label ""
+            :value {EWW_RAM.used_mem_perc ?: 0}
+            ;; :tooltip "Hello I'm RAM"
+            ;; :tooltip "RAM: ${round(EWW_RAM.used_mem / 1024 / 1024 / 1024, 1)}GB / ${round(EWW_RAM.total_mem / 1024 / 1024 / 1024, 1)}GB (${EWW_RAM.used_mem_perc ?: 0}%)"
+            :tooltip "RAM: ${round(EWW_RAM.used_mem / 1024 / 1024 / 1024, 1)}GB / ${round(EWW_RAM.total_mem / 1024 / 1024 / 1024, 1)}GB (${round(EWW_RAM.used_mem_perc ?: 0, 2)}%)"
+            :onchange "")
+    (metric :label "󱊞"
+            :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0) ?: 0}
+            ;; :tooltip "Hello I'm Storage"
+            :tooltip "Storage: ${round((EWW_DISK["/"].total - EWW_DISK["/"].free) / 1024 / 1024 / 1024, 1)}GB / ${round(EWW_DISK["/"].total / 1024 / 1024 / 1024, 1)}GB (${round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}%)"
+            :onchange "")
+    (volume)
+    ;; (systray :orientation "h" :spacing 6)
+    (wifi_tray)
+    (time)))
+
+(defwidget workspaces []
+  (literal :content workspaces_content))
+
+(defpoll workspaces_content :interval "100ms"
+  "./scripts/get_workspaces.sh")
+
+(defwidget music []
+  (box :class "music"
+       :orientation "h"
+       :space-evenly false
+       :halign "center"
+    {music != "" ? " ${music} " : ""}))
+
+
+(defwidget metric [label value onchange ?tooltip]
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+       :tooltip tooltip
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+; Use polling instead of socket listening for more reliability
+(defpoll current_workspace :interval "100ms" :initial "1"
+  "hyprctl activeworkspace -j | jq -r '.id' 2>/dev/null || echo 1")
+
+(deflisten music :initial ""
+  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+(defpoll volume :interval "1s"
+  "scripts/get_volume.sh")
+
+(defpoll time :interval "10s"
+  "date '+%a %b %e  %l:%M %p'")
+
+(defwidget the_calendar_widget []
+  (box :class "calendar" THE_CALENDAR))
+
+(defwindow the_calendar_window
+    :monitor 0
+    :geometry (geometry :x "0%"
+                        :y "0%"
+                        ;; :width "250px"
+                        ;; :height "100px"
+                        :anchor "top right")
+    :stacking "fg"
+  (the_calendar_widget))
+
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      ;; :width "99.5%"
+                      :width "100%"
+                      :height "24px"
+                      :anchor "top center")
+  :exclusive true
+  (bar))

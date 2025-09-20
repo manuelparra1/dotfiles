@@ -1,0 +1,12 @@
+@charset "UTF-8";
+@import "./novel-tex/basic/include.css";
+@import "./novel-tex/dark/basic-dark-config.css";
+
+:root {
+  /* Novel Tex Normal Dark */
+  --bg-color: rgb(40, 40, 40);
+  --sidebar-bg-color: rgb(50, 50, 50);
+
+  --li-code-bg-color: rgb(70, 70, 70);
+  --code-bg-color: rgb(50, 50, 50);
+}

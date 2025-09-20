@@ -1,0 +1,21 @@
+term = xterm-kitty
+theme = catppuccin-mocha
+
+working-directory = /home/dusts/aston/03-Greenlit/00-Contract-Mock-Prep/00-CHOP/Week-16/
+
+font-family = "CaskaydiaCove Nerd Font"
+
+font-size = 24
+
+mouse-hide-while-typing = true
+
+window-decoration = false
+
+background = 000000
+background-opacity = 0.5
+background-blur-radius = 20
+
+custom-shader = /home/dusts/.config/ghostty/shaders/retro_crt_bloom_barrel.glsl
+
+# -----------------------------
+# Reload Config: `ctrl+shift+,`

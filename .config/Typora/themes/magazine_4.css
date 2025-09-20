@@ -1,0 +1,538 @@
+/* magazine.css - Main Theme File */
+@import "magazine/magazine.css";
+
+/* Global Variables */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  /* Typography */
+  --font-family-base: "Source Sans 3", sans-serif;
+  --font-family-monospace: "0xProto", monospace;
+  /* Heading colors */
+  --heading-color: #000000;
+  --subheading-color: #333333;
+  /* Code colors - Catppuccin Macchiato */
+  --code-bg-color: #24273a; /* base */
+  --code-text-color: #cad3f5; /* text */
+  /* Accent colors */
+  --accent-color: #0842a0;
+  --light-accent: #f5f5f5;
+  --quote-color: #666;
+  --quote-border: #999;
+  /* Spacing */
+  --content-max-width: 950px;
+}
+
+/* Global Styles */
+html,
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family-base);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Writing Area */
+#write {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* ===== MAGAZINE TYPOGRAPHY ===== */
+
+/* Giant Title (H1) */
+h1 {
+  font-size: 4rem;
+  line-height: 1.1;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 3rem 0 2rem;
+  color: var(--heading-color);
+  text-align: center;
+}
+
+/* Subtitle/Standfirst (can be created with a blockquote directly after h1) */
+h1 + blockquote {
+  border-left: none;
+  font-style: italic;
+  font-size: 1.4rem;
+  line-height: 1.4;
+  text-align: center;
+  margin: 1.5rem auto 3rem;
+  max-width: 85%;
+  color: var(--quote-color);
+  padding: 0;
+}
+
+h1 + blockquote p {
+  margin: 0;
+}
+
+/* H2 subheadings - spaced out letters */
+h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin: 2.5rem 0 1.5rem;
+  color: var(--heading-color);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+/* H3 sections - bold thick font */
+h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  margin-bottom: 0.1rem; /* Space below h3 */
+  color: var(--heading-color);
+  text-transform: uppercase;
+}
+
+/* Other headings */
+h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem; /* Space below h4 */
+  color: var(--subheading-color);
+  margin: 1.25rem 0 0.75rem;
+}
+
+h5 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--subheading-color);
+  margin: 1rem 0 0.5rem;
+}
+
+h6 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0.75rem 0 0.5rem;
+  color: var(--quote-color);
+}
+
+/* Drop cap scenarios */
+h1 + p::first-letter,
+h1 + blockquote + p::first-letter {
+  float: left;
+  font-size: 3.5rem;
+  line-height: 0.8;
+  font-weight: 700;
+  margin: 0.15em 0.1em 0 0;
+  text-transform: uppercase;
+  color: var(--heading-color);
+}
+
+/* Regular paragraphs */
+p {
+  margin: 0 0 1.2rem;
+  margin-top: 0.5rem;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+/* Pull quotes / blockquotes */
+blockquote {
+  font-size: 1.25rem;
+  font-style: italic;
+  border-left: 3px solid var(--quote-border);
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  margin: 2rem 1rem;
+  color: var(--quote-color);
+  position: relative;
+}
+
+blockquote::before {
+  content: ""
+    ";
+  font-size: 3rem;
+  position: absolute;
+  left: -0.2rem;
+  top: -1rem;
+  color: var(--quote-border);
+  font-family: serif;
+}
+
+blockquote::after {
+  content: "
+    "";
+  font-size: 3rem;
+  position: absolute;
+  right: 0.5rem;
+  bottom: -2rem;
+  color: var(--quote-border);
+  font-family: serif;
+}
+
+blockquote p {
+  margin-bottom: 0.5rem;
+}
+
+/* ===== SPECIAL BLOCKQUOTE FORMATS ===== */
+
+/* Note boxes - use > ### Note syntax */
+blockquote h3:first-child {
+  margin-top: 0;
+  font-weight: 700;
+}
+
+blockquote h3:first-child + p {
+  margin-top: 0.5rem;
+}
+
+/* "Note" style */
+blockquote h3:first-child:contains("Note") {
+  color: #0842a0;
+}
+
+blockquote h3:first-child:contains("Note") + p {
+  color: #333;
+}
+
+/* "Remember" style */
+blockquote h3:first-child:contains("Remember") {
+  color: #2b8a3e;
+}
+
+/* "Caution" style */
+blockquote h3:first-child:contains("Caution") {
+  color: #e8590c;
+}
+
+/* ===== INLINE ELEMENTS ===== */
+
+/* Inline Code */
+code {
+  font-family: var(--font-family-monospace);
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Links */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+a:hover {
+  border-bottom: 1px solid var(--accent-color);
+}
+
+/* Strong and Emphasis */
+strong {
+  font-weight: 700;
+  color: #000;
+}
+
+strong,
+b {
+  color: #292d3d; /* Desired color */
+  font-weight: 700; /* Desired weight */
+}
+em {
+  font-style: italic;
+}
+
+/* ===== BLOCK ELEMENTS ===== */
+
+/* Code Fences with macOS "traffic lights" + Catppuccin dark */
+.md-fences {
+  position: relative;
+  background-color: var(--code-bg-color);
+  color: var(--code-text-color);
+  border-radius: 7px;
+  padding: 34px 10px 10px 10px;
+  margin: 1.5rem 0;
+  font-family: var(--font-family-monospace);
+  font-size: 0.9rem;
+  overflow: auto;
+}
+
+.md-fences::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ff5f56; /* red circle */
+  box-shadow:
+    22px 0 #ffbd2e,
+    /* yellow circle */ 44px 0 #27c93f; /* green circle */
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 8px;
+  /* box-shadow: 0px 2px 12px 4px rgba(0, 0, 0, 0.1); */
+  margin: 1.5rem auto;
+  display: block;
+}
+
+/* Figure captions */
+figure {
+  margin: 2rem 0;
+}
+
+figure > img {
+  margin-bottom: 0.5rem;
+}
+
+figcaption {
+  font-size: 0.9rem;
+  color: var(--quote-color);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+thead {
+  background-color: var(--light-accent);
+}
+
+th {
+  font-weight: 700;
+}
+
+table,
+th,
+td {
+  border: 1px solid #e1e3e1;
+}
+
+th,
+td {
+  padding: 12px 18px;
+  text-align: left;
+}
+
+/* Lists */
+ul,
+ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 2rem 0;
+}
+
+/* ===== MULTI-COLUMN LAYOUT ===== */
+/* Note: This may not work perfectly in all Typora views */
+
+/* Apply multi-column layout using a custom class */
+.columns-2 {
+  column-count: 2;
+  column-gap: 2rem;
+}
+
+.columns-3 {
+  column-count: 3;
+  column-gap: 2rem;
+}
+
+/* Elements that should span all columns */
+.column-span-all {
+  column-span: all;
+}
+
+/* ===== PRINT ADJUSTMENTS ===== */
+@media print {
+  body {
+    font-size: 11pt;
+  }
+
+  h1 {
+    font-size: 24pt;
+  }
+
+  h2 {
+    font-size: 18pt;
+  }
+
+  pre {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+}
+
+/********************************************
+ * Syntax highlighting for Typora - Catppuccin Macchiato
+ ********************************************/
+
+/* Comments */
+.cm-s-typora-default .cm-comment,
+.cm-s-inner .cm-comment {
+  color: #939ab7; /* overlay2 */
+  font-style: italic;
+}
+
+/* Keywords */
+.cm-s-typora-default .cm-keyword,
+.cm-s-inner .cm-keyword {
+  color: #c6a0f6; /* mauve */
+}
+
+/* Strings */
+.cm-s-typora-default .cm-string,
+.cm-s-inner .cm-string {
+  color: #a6da95; /* green */
+}
+
+/* Numbers, constants */
+.cm-s-typora-default .cm-number,
+.cm-s-inner .cm-number {
+  color: #f5a97f; /* peach */
+}
+
+/* Built-in names, special tokens */
+.cm-s-typora-default .cm-builtin,
+.cm-s-inner .cm-builtin,
+.cm-s-typora-default .cm-atom,
+.cm-s-inner .cm-atom {
+  color: #ed8796; /* red */
+}
+
+/* Operators */
+.cm-s-typora-default .cm-operator,
+.cm-s-inner .cm-operator {
+  color: #91d7e3; /* sky */
+}
+
+/* Brackets, parens, punctuation */
+.cm-s-typora-default .cm-bracket,
+.cm-s-inner .cm-bracket {
+  color: #cad3f5; /* text */
+}
+
+/* Tag names (HTML/XML) */
+.cm-s-typora-default .cm-tag,
+.cm-s-inner .cm-tag {
+  color: #ee99a0; /* maroon */
+}
+
+/* Tag attributes, e.g. <div class="..."> */
+.cm-s-typora-default .cm-attribute,
+.cm-s-inner .cm-attribute {
+  color: #eed49f; /* yellow */
+}
+
+/* Function or method calls */
+.cm-s-typora-default .cm-def,
+.cm-s-inner .cm-def {
+  color: #8aadf4; /* blue */
+}
+
+/* Variables */
+.cm-s-typora-default .cm-variable,
+.cm-s-inner .cm-variable {
+  color: #cad3f5; /* text */
+}
+
+.cm-s-typora-default .cm-variable-2,
+.cm-s-inner .cm-variable-2 {
+  color: #eed49f; /* yellow */
+}
+
+.cm-s-typora-default .cm-variable-3,
+.cm-s-inner .cm-variable-3 {
+  color: #7dc4e4; /* sapphire */
+}
+
+/* Secondary strings or regex */
+.cm-s-typora-default .cm-string-2,
+.cm-s-inner .cm-string-2 {
+  color: #f5bde6; /* pink */
+}
+
+/* Types, classes, interface names */
+.cm-s-typora-default .cm-type,
+.cm-s-inner .cm-type {
+  color: #8bd5ca; /* teal */
+}
+
+/* Property names or JSON keys */
+.cm-s-typora-default .cm-property,
+.cm-s-inner .cm-property {
+  color: #8aadf4; /* blue */
+}
+
+/* Qualifiers */
+.cm-s-typora-default .cm-qualifier,
+.cm-s-inner .cm-qualifier {
+  color: #c6a0f6; /* mauve */
+}
+
+/* Markdown or HTML headings */
+.cm-s-typora-default .cm-header,
+.cm-s-inner .cm-header {
+  color: #b7bdf8; /* lavender */
+  font-weight: bold;
+}
+
+/* Bold text in Markdown */
+.cm-s-typora-default .cm-strong,
+.cm-s-inner .cm-strong {
+  color: #f5bde6; /* pink */
+  font-weight: bold;
+}
+
+/* Italic text in Markdown */
+.cm-s-typora-default .cm-em,
+.cm-s-inner .cm-em {
+  color: #a6da95; /* green */
+  font-style: italic;
+}
+
+/* Link text, or URL tokens */
+.cm-s-typora-default .cm-link,
+.cm-s-inner .cm-link {
+  color: #91d7e3; /* sky */
+  text-decoration: underline;
+}
+
+.cm-s-typora-default .cm-url,
+.cm-s-inner .cm-url {
+  color: #91d7e3;
+}
+
+/* Error or mismatched tokens */
+.cm-s-typora-default .cm-error,
+.cm-s-inner .cm-error {
+  color: #ed8796; /* red */
+  text-decoration: underline;
+}

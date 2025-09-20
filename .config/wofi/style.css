@@ -1,0 +1,40 @@
+* {
+  border: none;
+  border-radius: 15px;
+  border-bottom: none;
+  box-shadow: none;
+  outline: none;
+  color: white;
+  padding: 0.05em;
+}
+
+window {
+  font-size: 24px;
+  font-family: "SFProDisplay Nerd Font SemiBold";
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+#entry {
+  font-size: 20px;
+  font-family: "SFProDisplay Nerd Font SemiBold";
+  padding: 0.25em;
+}
+
+#entry:selected {
+  background-color: #007aff;
+  border-radius: 15px;
+}
+
+#text:selected {
+  background-color: #007aff;
+}
+
+#input {
+  background-color: rgba(50, 50, 50, 0.9);
+  padding: 0.25em;
+}
+
+image {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}

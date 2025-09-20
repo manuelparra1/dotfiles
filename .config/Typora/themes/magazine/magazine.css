@@ -1,0 +1,51 @@
+/* magazine/magazine.css - Font and Asset Declarations */
+
+/* Source Sans 3 - Regular (Variable) */
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 200 900; /* or whatever range your variable font supports */
+  /* Adjust the path if fonts are in a different subfolder */
+  src: url("./SourceSans3-VariableFont_wght.ttf") format("truetype-variations");
+  font-optical-sizing: auto;
+}
+
+/* Source Sans 3 - Italic (Variable) */
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: italic;
+  font-weight: 200 900;
+  src: url("./SourceSans3-Italic-VariableFont_wght.ttf")
+    format("truetype-variations");
+  font-optical-sizing: auto;
+}
+
+/* 0xProto - Regular (Code Font) */
+@font-face {
+  font-family: "0xProto";
+  font-style: normal;
+  font-weight: 400; /* or 'normal' */
+  src:
+    local("0xProto Regular"),
+    url("./0xProto-Regular.woff2") format("woff2");
+}
+
+/* 0xProto - Italic (Code Font) */
+@font-face {
+  font-family: "0xProto";
+  font-style: italic;
+  font-weight: 400;
+  src:
+    local("0xProto Italic"),
+    url("./0xProto-Italic.woff2") format("woff2");
+}
+
+/* 0xProto - Bold (Code Font) */
+@font-face {
+  font-family: "0xProto";
+  font-style: normal;
+  font-weight: 700; /* or 'bold' */
+  src:
+    local("0xProto Bold"),
+    url("./0xProto-Bold.woff2") format("woff2");
+}

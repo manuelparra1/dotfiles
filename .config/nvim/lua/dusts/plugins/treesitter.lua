@@ -29,6 +29,7 @@ return {
 					"javascript",
 					"typescript",
 					"tsx",
+					"regex",
 					"yaml",
 					"html",
 					"css",

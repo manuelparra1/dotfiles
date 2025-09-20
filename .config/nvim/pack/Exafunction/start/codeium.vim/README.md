@@ -114,8 +114,8 @@ let g:codeium_filetypes = {
 
 Codeium is enabled by default for most filetypes.
 
-You can also _disable_ codeium by default with the `g:codeium_enabled`
-variable:
+You can also _disable_ codeium by default with the `g:codeium_enabled` variable,
+and enable it manually per buffer by running `:CodeiumEnable`:
 
 ```vim
 let g:codeium_enabled = v:false
@@ -127,11 +127,28 @@ or in Neovim:
 vim.g.codeium_enabled = false
 ```
 
-Instead, if you would like to just disable the automatic triggering of
-completions:
+Or you can disable codeium for _all filetypes_ with the `g:codeium_filetypes_disabled_by_default` variable,
+and use the `g:codeium_filetypes` variable to selectively enable codeium for specified filetypes:
+
+```vim
+" let g:codeium_enabled = v:true
+let g:codeium_filetypes_disabled_by_default = v:true
+
+let g:codeium_filetypes = {
+    \ "rust": v:true,
+    \ "typescript": v:true,
+    \ }
+```
+
+If you would like to just disable the automatic triggering of completions:
 
 ```vim
 let g:codeium_manual = v:true
+
+" You might want to use `CycleOrComplete()` instead of `CycleCompletions(1)`.
+" This will make the forward cycling of suggestions also trigger the first
+" suggestion manually.
+imap <C-;> <Cmd>call codeium#CycleOrComplete()<CR>
 ```
 
 To disable automatic text rendering of suggestions (the gray text that appears for a suggestion):
@@ -168,6 +185,10 @@ vim-airline supports Codeium out-of-the-box since commit [3854429d](https://gith
 ### Launching Codeium Chat
 
 Calling the `codeium#Chat()` function will enable search and indexing in the current project and launch Codeium Chat in a new browser window.
+
+```vim
+:call codeium#Chat()
+```
 
 The project root is determined by looking in Vim's current working directory for some specific files or directories to be present and goes up to parent directories until one is found.  This list of hints is user-configurable and the default value is:
 

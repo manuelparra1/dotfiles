@@ -32,8 +32,10 @@ return {
 				end,
 			},
 			mapping = cmp.mapping.preset.insert({
-				["<Tab>"] = cmp.mapping.select_next_item(),
-				["<S-Tab>"] = cmp.mapping.select_prev_item(),
+				-- ["<Tab>"] = cmp.mapping.select_next_item(),
+				["<C-g>"] = cmp.mapping.select_next_item(),
+				-- ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+				["<C-p>"] = cmp.mapping.select_prev_item(),
 				-- ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
 				-- ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
 				["<C-k>"] = cmp.mapping.scroll_docs(-4),

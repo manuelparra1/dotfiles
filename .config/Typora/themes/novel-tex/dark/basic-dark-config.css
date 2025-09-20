@@ -1,0 +1,9 @@
+@import "./code-dark.css";
+
+:root {
+  --text-color: rgb(180, 180, 180);
+  --strong-text-color: rgb(255, 255, 255);
+  --title-text-color: rgb(200, 200, 200);
+
+  --link-color: grey;
+}

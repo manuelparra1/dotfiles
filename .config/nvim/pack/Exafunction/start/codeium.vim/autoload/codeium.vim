@@ -21,7 +21,10 @@ function! codeium#Enabled() abort
 
   let codeium_filetypes = s:default_codeium_enabled
   call extend(codeium_filetypes, get(g:, 'codeium_filetypes', {}))
-  if !get(codeium_filetypes, &filetype, 1)
+
+  let codeium_filetypes_disabled_by_default = get(g:, 'codeium_filetypes_disabled_by_default') || get(b:, 'codeium_filetypes_disabled_by_default')
+
+  if !get(codeium_filetypes, &filetype, !codeium_filetypes_disabled_by_default)
     return v:false
   endif
 
@@ -36,14 +39,14 @@ function! codeium#CompletionText() abort
   endtry
 endfunction
 
-function! codeium#Accept() abort
+function! s:CompletionInserter(current_completion, insert_text) abort
   let default = get(g:, 'codeium_tab_fallback', pumvisible() ? "\<C-N>" : "\t")
 
   if mode() !~# '^[iR]' || !exists('b:_codeium_completions')
     return default
   endif
 
-  let current_completion = s:GetCurrentCompletionItem()
+  let current_completion = a:current_completion
   if current_completion is v:null
     return default
   endif
@@ -55,7 +58,7 @@ function! codeium#Accept() abort
   let start_offset = get(range, 'startOffset', 0)
   let end_offset = get(range, 'endOffset', 0)
 
-  let text = current_completion.completion.text . suffix_text
+  let text = a:insert_text . suffix_text
   if empty(text)
     return default
   endif
@@ -82,6 +85,29 @@ function! codeium#Accept() abort
   endif
   call codeium#server#Request('AcceptCompletion', {'metadata': codeium#server#RequestMetadata(), 'completion_id': current_completion.completion.completionId})
   return delete_range . insert_text . cursor_text
+endfunction
+
+function! codeium#Accept() abort
+  let current_completion = s:GetCurrentCompletionItem()
+  return s:CompletionInserter(current_completion, current_completion is v:null ? '' : current_completion.completion.text)
+endfunction
+
+function! codeium#AcceptNextWord() abort
+  let current_completion = s:GetCurrentCompletionItem()
+  let completion_parts = current_completion is v:null ? [] : get(current_completion, 'completionParts', [])
+  if len(completion_parts) == 0
+    return ''
+  endif
+  let prefix_text = get(completion_parts[0], 'prefix', '')
+  let completion_text = get(completion_parts[0], 'text', '')
+  let next_word = matchstr(completion_text, '\v^\W*\k*')
+  return s:CompletionInserter(current_completion, prefix_text . next_word)
+endfunction
+
+function! codeium#AcceptNextLine() abort
+  let current_completion = s:GetCurrentCompletionItem()
+  let text = current_completion is v:null ? '' : substitute(current_completion.completion.text, '\v\n.*$', '', '')
+  return s:CompletionInserter(current_completion, text)
 endfunction
 
 function! s:HandleCompletionsResult(out, err, status) abort
@@ -395,9 +421,15 @@ function! s:LaunchChat(out, err, status) abort
   let l:processes = json_decode(join(a:out, ''))
   let l:chat_port = l:processes['chatClientPort']
   let l:ws_port = l:processes['chatWebServerPort']
+
+  let config = get(g:, 'codeium_server_config', {})
+  let l:has_enterprise_extension = 'false'
+  if has_key(config, 'api_url') && !empty(config.api_url)
+    let l:has_enterprise_extension = 'true'
+  endif
+
   " Hard-coded to English locale and allowed telemetry.
-  " Not touching has_enterprise_extension
-  let l:url = 'http://127.0.0.1:' . l:chat_port . '/?' . 'api_key=' . l:metadata.api_key . '&ide_name=' . l:metadata.ide_name . '&ide_version=' . l:metadata.ide_version . '&extension_name=' . l:metadata.extension_name . '&extension_version=' . l:metadata.extension_version . '&web_server_url=ws://127.0.0.1:' . l:ws_port . '&app_name=Vim&locale=en&ide_telemetry_enabled=true&has_index_service=true'
+  let l:url = 'http://127.0.0.1:' . l:chat_port . '/?' . 'api_key=' . l:metadata.api_key . '&ide_name=' . l:metadata.ide_name . '&ide_version=' . l:metadata.ide_version . '&extension_name=' . l:metadata.extension_name . '&extension_version=' . l:metadata.extension_version . '&web_server_url=ws://127.0.0.1:' . l:ws_port . '&has_enterprise_extension=' . l:has_enterprise_extension . '&app_name=Vim&locale=en&ide_telemetry_enabled=true&has_index_service=true'
   let l:browser = codeium#command#BrowserCommand()
   let opened_browser = v:false
   if !empty(browser)
@@ -443,7 +475,7 @@ function! codeium#AddTrackedWorkspace() abort
   endif
   let s:codeium_workspace_indexed = v:true
   try
-    call codeium#server#Request('AddTrackedWorkspace', {"workspace": s:GetProjectRoot()})
+    call codeium#server#Request('AddTrackedWorkspace', {'workspace': s:GetProjectRoot()})
   catch
     call codeium#log#Exception()
   endtry

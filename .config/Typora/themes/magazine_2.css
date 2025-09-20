@@ -1,0 +1,422 @@
+/* magazine_2.css - Main Theme File */
+@import "magazine/magazine.css";
+
+/* Global Variables */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --font-family-base: "Source Sans 3", sans-serif;
+  --font-family-monospace: "0xProto", monospace;
+  --accent-color: #0842a0;
+
+  /* Catppuccin Macchiato colors */
+  --code-bg-color: #24273a; /* base */
+  --code-text-color: #cad3f5; /* text */
+
+  /* Magazine colors */
+  --title-color: #000000;
+  --subtitle-color: #555555;
+  --quote-color: #666666;
+  --dropcap-color: #000000;
+}
+
+/* Global Styles */
+html,
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family-base);
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Writing Area */
+#write {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* ===============================
+   MAGAZINE TYPOGRAPHY HIERARCHY
+   =============================== */
+
+/* 1. Giant Headline (H1) */
+/* Add line under header */
+h1 {
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 2rem 0 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--title-color);
+  text-align: center;
+}
+
+/* 2. Standfirst/Subtitle (can be created with blockquote right after h1) */
+h1 + blockquote {
+  border-left: none;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--subtitle-color);
+  text-align: center;
+  margin: 1rem auto 2rem;
+  max-width: 80%;
+  padding: 0;
+}
+
+h1 + blockquote p {
+  margin: 0;
+
+/* 3. Section Headers (H2) - Wide letter-spacing */
+h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.19em;
+  margin: 2.5rem 0 1rem;
+  color: var(--title-color);
+}
+
+/* 4. Subsection Headers (H3) - Bold sans with tight spacing */
+h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--title-color);
+}
+
+/* 5. Minor Headers (H4-H6) */
+h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+}
+
+h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+  color: var(--subtitle-color);
+}
+
+h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+  color: var(--subtitle-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 6. DROP CAP - Apply to first paragraph after H1 */
+h1 + p::first-letter {
+  float: left;
+  font-size: 5rem;
+  line-height: 0.8;
+  font-weight: 700;
+  margin: 0.1em 0.1em 0 0;
+  color: var(--dropcap-color);
+}
+
+/* 7. Body Text */
+p {
+  margin: 0 0 1.2em;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* 8. Pull Quotes (regular blockquotes not right after h1) */
+blockquote:not(h1 + blockquote) {
+  border-left: 4px solid #ddd;
+  padding: 0.5rem 1rem;
+  margin: 1.5rem 0;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--quote-color);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+blockquote:not(h1 + blockquote)::before {
+  content: open-quote;
+  font-size: 2rem;
+  line-height: 0.1em;
+  margin-right: 0.25rem;
+  vertical-align: -0.4rem;
+  color: #aaa;
+}
+
+blockquote:not(h1 + blockquote)::after {
+  content: close-quote;
+  font-size: 2rem;
+  line-height: 0.1em;
+  margin-left: 0.25rem;
+  vertical-align: -0.4rem;
+  color: #aaa;
+}
+
+/* 9. Special Notes (> ### Note syntax) */
+blockquote h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Notes (blue) */
+blockquote h3:contains("Note") {
+  color: #0842a0;
+}
+blockquote h3:contains("Note") + p {
+  color: #0842a0;
+}
+
+/* Remember (green) */
+blockquote h3:contains("Remember") {
+  color: #28a745;
+}
+blockquote h3:contains("Remember") + p {
+  color: #28a745;
+}
+
+/* Caution (orange) */
+blockquote h3:contains("Caution") {
+  color: #fd7e14;
+}
+blockquote h3:contains("Caution") + p {
+  color: #fd7e14;
+}
+
+/* ===============================
+   MACOS-STYLE CODE BLOCKS WITH CATPPUCCIN
+   =============================== */
+
+/* Inline Code */
+code {
+  font-family: var(--font-family-monospace);
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Code Fences (macOS "traffic lights" + Catppuccin dark) */
+.md-fences {
+  position: relative;
+  background-color: var(--code-bg-color);
+  color: var(--code-text-color);
+  border-radius: 8px;
+  padding: 34px 16px 16px 16px;
+  overflow: auto;
+  margin: 1.5rem 0;
+  font-family: var(--font-family-monospace);
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* macOS traffic lights */
+.md-fences::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56; /* red circle */
+  box-shadow:
+    22px 0 #ffbd2e,
+    /* yellow circle */ 44px 0 #27c93f; /* green circle */
+}
+
+/* macOS title bar */
+.md-fences::after {
+  content: "code";
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-family-base);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  pointer-events: none;
+}
+
+/* ===============================
+   OTHER ELEMENTS
+   =============================== */
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.15);
+  margin: 1.5rem 0;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+table,
+th,
+td {
+  border: 1px solid #e1e3e1;
+}
+
+th,
+td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+th {
+  background-color: rgba(0, 0, 0, 0.03);
+  font-weight: 600;
+}
+
+/* Links */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Horizontal Rule */
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 2rem 0;
+}
+
+/* Print Adjustments */
+@media print {
+  body {
+    font-size: 5pt;
+  }
+
+  h1 {
+    font-size: 48pt;
+  }
+
+  h2 {
+    font-size: 14pt;
+  }
+
+  code,
+  pre {
+    font-size: 8pt;
+  }
+}
+
+/********************************************
+ * Syntax highlighting for Catppuccin Macchiato
+ ********************************************/
+
+/* Comments */
+.cm-s-typora-default .cm-comment,
+.cm-s-inner .cm-comment {
+  color: #939ab7; /* overlay2 */
+  font-style: italic;
+}
+
+/* Keywords */
+.cm-s-typora-default .cm-keyword,
+.cm-s-inner .cm-keyword {
+  color: #c6a0f6; /* mauve */
+}
+
+/* Strings */
+.cm-s-typora-default .cm-string,
+.cm-s-inner .cm-string {
+  color: #a6da95; /* green */
+}
+
+/* Numbers, constants */
+.cm-s-typora-default .cm-number,
+.cm-s-inner .cm-number {
+  color: #f5a97f; /* peach */
+}
+
+/* Built-in names, special tokens */
+.cm-s-typora-default .cm-builtin,
+.cm-s-inner .cm-builtin,
+.cm-s-typora-default .cm-atom,
+.cm-s-inner .cm-atom {
+  color: #ed8796; /* red */
+}
+
+/* Operators */
+.cm-s-typora-default .cm-operator,
+.cm-s-inner .cm-operator {
+  color: #91d7e3; /* sky */
+}
+
+/* Brackets, parens, punctuation */
+.cm-s-typora-default .cm-bracket,
+.cm-s-inner .cm-bracket {
+  color: #cad3f5; /* text */
+}
+
+/* Tag names (HTML/XML) */
+.cm-s-typora-default .cm-tag,
+.cm-s-inner .cm-tag {
+  color: #ee99a0; /* maroon */
+}
+
+/* Tag attributes */
+.cm-s-typora-default .cm-attribute,
+.cm-s-inner .cm-attribute {
+  color: #eed49f; /* yellow */
+}
+
+/* Function or method calls */
+.cm-s-typora-default .cm-def,
+.cm-s-inner .cm-def {
+  color: #8aadf4; /* blue */
+}
+
+/* Variables */
+.cm-s-typora-default .cm-variable,
+.cm-s-inner .cm-variable {
+  color: #cad3f5; /* text */
+}
+
+.cm-s-typora-default .cm-variable-2,
+.cm-s-inner .cm-variable-2 {
+  color: #eed49f; /* yellow */
+}
+
+.cm-s-typora-default .cm-variable-3,
+.cm-s-inner .cm-variable-3 {
+  color: #7dc4e4; /* sapphire */
+}
+
+/* Types, classes, interface names */
+.cm-s-typora-default .cm-type,
+.cm-s-inner .cm-type {
+  color: #8bd5ca; /* teal */
+}
+
+/* Property names or JSON keys */
+.cm-s-typora-default .cm-property,
+.cm-s-inner .cm-property {
+  color: #8aadf4; /* blue */
+}

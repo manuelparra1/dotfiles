@@ -1,5 +1,5 @@
-let s:language_server_version = '1.8.10'
-let s:language_server_sha = 'c5111ded242add71608e7a70094645bb463f5ad8'
+let s:language_server_version = '1.12.0'
+let s:language_server_sha = 'beda8738f37970fd4066114bfb0e930e01316a62'
 let s:root = expand('<sfile>:h:h:h')
 let s:bin = v:null
 
@@ -107,10 +107,31 @@ function! s:FindPort(dir, timer) abort
     if time - getftime(path) <= 5 && getftype(path) ==# 'file'
       call codeium#log#Info('Found port: ' . name)
       let s:server_port = name
+      call s:RequestServerStatus()
       call timer_stop(a:timer)
       break
     endif
   endfor
+endfunction
+
+function! s:RequestServerStatus() abort
+  call codeium#server#Request('GetStatus', {'metadata': codeium#server#RequestMetadata()}, function('s:HandleGetStatusResponse'))
+endfunction
+
+function! s:HandleGetStatusResponse(out, err, status) abort
+  " Check if the request was successful
+  if a:status == 0
+    " Parse the JSON response
+    let response = json_decode(join(a:out, "\n"))
+    let status = response.status
+    " Check if there is a message in the response and echo it
+    if has_key(status, 'message') && !empty(status.message)
+      echom status.message
+    endif
+  else
+    " Handle error if the status is not 0 or if there is stderr output
+    call codeium#log#Error(join(a:err, "\n"))
+  endif
 endfunction
 
 function! s:SendHeartbeat(timer) abort
@@ -234,6 +255,7 @@ function! s:ActuallyStart() abort
         \ ]
   if has_key(config, 'api_url') && !empty(config.api_url)
     let args += ['--enterprise_mode']
+    let args += ['--portal_url', get(config, 'portal_url', 'https://codeium.example.com')]
   endif
 
   call codeium#log#Info('Launching server with manager_dir ' . manager_dir)
