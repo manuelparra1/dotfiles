@@ -86,7 +86,6 @@ autoload -Uz compinit && compinit
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/Themes/catppuccin_mocha-zsh-syntax-highlighting.zsh
 
 # ZSH Plugins
-source ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source ~/.config/zsh/plugins/zsh-completions/zsh-completions.plugin.zsh
