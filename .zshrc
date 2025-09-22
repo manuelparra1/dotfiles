@@ -1,6 +1,6 @@
 export BAT_THEME="Catppuccin Mocha"
 export HYPRSHOT_DIR="$HOME/Pictures/Screenshots/"
-eval $(dircolors ~/.bliss_dircolors)
+eval $(dircolors ~/.dir_colors)
 
 # export QT_QPA_PLATFORM=xcb vlc
 alias ls='eza -1rs oldest'
