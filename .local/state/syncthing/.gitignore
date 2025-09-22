@@ -1,0 +1,8 @@
+cert.pem
+key.pem
+https-cert.pem
+https-key.pem
+index-*.db
+audit-*.log
+panic-*.log
+syncthing.log
