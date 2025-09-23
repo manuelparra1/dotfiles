@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 # Check if the wifi menu window is currently open
 if eww active-windows | grep -q "wifi_menu_window"; then

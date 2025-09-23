@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 # Check if audio is currently muted
 if wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q "MUTED"; then

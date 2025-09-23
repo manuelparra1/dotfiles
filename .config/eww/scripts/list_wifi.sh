@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 nmcli -t -f SSID,CHAN,SIGNAL,SECURITY device wifi list | \
 grep '^[A-Za-z]' | \

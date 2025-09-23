@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 # Check for battery (common path)
 if [ -d "/sys/class/power_supply/BAT0" ]; then
