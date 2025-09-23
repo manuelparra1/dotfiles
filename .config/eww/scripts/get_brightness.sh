@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 # If brightnessctl doesn't exist or finds no device, output 0.
 if ! command -v brightnessctl &> /dev/null || [ -z "$(brightnessctl -l)" ]; then

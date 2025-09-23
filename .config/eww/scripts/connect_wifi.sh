@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 # Arguments: BSSID, SSID, Security
 BSSID="$1"
 SSID="$2"

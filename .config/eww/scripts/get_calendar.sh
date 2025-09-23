@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 # Get today's date to highlight
 TODAY=$(date +%Y-%m-%d)

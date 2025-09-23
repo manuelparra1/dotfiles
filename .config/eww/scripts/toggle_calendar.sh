@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 # Get current state
 CURRENT_STATE=$(eww get show_calendar)
