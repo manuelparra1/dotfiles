@@ -89,7 +89,7 @@ return {
 			},
 			grok = {
 				url = "https://api.x.ai/v1/chat/completions",
-				model = "grok-4-latest",
+				model = "grok-4-fast-non-reasoning",
 				api_key_name = "GROK_API_KEY",
 			},
 			lambda = {
