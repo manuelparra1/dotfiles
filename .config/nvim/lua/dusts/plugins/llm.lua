@@ -36,6 +36,11 @@ return {
 				model = "gpt-4.1",
 				api_key_name = "OPENAI_API_KEY",
 			},
+			sonoma_sky = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "openrouter/sonoma-sky-alpha",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
 			sonoma_dusk = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
 				model = "openrouter/sonoma-dusk-alpha",
@@ -48,7 +53,7 @@ return {
 			},
 			openrouter = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "openrouter/sonoma-sky-alpha",
+				model = "meta-llama/llama-3.2-1b-instruct",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
 			tiny_qwen3 = {
@@ -91,15 +96,6 @@ return {
 				url = "https://api.x.ai/v1/chat/completions",
 				model = "grok-4-fast-non-reasoning",
 				api_key_name = "GROK_API_KEY",
-			},
-			lambda = {
-				url = "https://api.lambdalabs.com/v1/chat/completions",
-				model = "llama-4-maverick-17b-128e-instruct-fp8",
-				api_key_name = "LAMBDA_API_KEY",
-				headers = {
-					["Content-Type"] = "application/json",
-					["Accept"] = "text/event-stream",
-				},
 			},
 			deepcoder = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
@@ -150,15 +146,6 @@ return {
 				url = "https://openrouter.ai/api/v1/chat/completions",
 				model = "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
 				api_key_name = "OPENROUTER_API_KEY",
-			},
-			nemotron = {
-				url = "https://api.lambdalabs.com/v1/chat/completions",
-				model = "llama3.1-nemotron-70b-instruct",
-				api_key_name = "LAMBDA_API_KEY",
-				headers = {
-					["Content-Type"] = "application/json",
-					["Accept"] = "text/event-stream",
-				},
 			},
 			deepseek = {
 				url = "https://api.deepseek.com/v1/chat/completions",
@@ -823,6 +810,15 @@ transformed markdown.
 			})
 		end, { desc = "Append OpenRouter (OSS 20B) response after selection (notes)" })
 		--
+		-- Append Tiny Llama response after selection
+		vim.keymap.set("v", "<leader>tlm", function()
+			llm.prompt_selection_only_append({
+				service = "tiny_llama",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Llama 3.2 1B response after visual selection" })
+		--
 		-- Append Sonoma Dusk
 		--
 		vim.keymap.set("v", "<leader>tsd", function()
@@ -914,16 +910,6 @@ transformed markdown.
 				temperature = 0.75,
 			})
 		end, { desc = "Append Mistral Small response after selection (notes)" })
-		--
-		-- Append Lambda response after selection
-		--
-		vim.keymap.set("v", "<leader>nl", function()
-			llm.prompt_selection_only_append({
-				service = "lambda",
-				system_prompt = note_system_prompt,
-				temperature = 0.75,
-			})
-		end, { desc = "Append Lambda (Llama 4 Scout) response after selection (notes)" })
 		--
 		-- Append Nemotron response after selection
 		--

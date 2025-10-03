@@ -14,7 +14,11 @@ export CLICOLOR=true
 export PATH="$HOME/.local/bin:$PATH"
 
 path+=('/home/dusts/.bin/')
-path+=("/mnt/c/bin/")
+path+=("/home/dusts/.cargo/bin")
+
+# API Keys
+# =======
+
 alias chatgpt4o-mini='chatgpt.sh -i "respond in a simple and concise manner" --model gpt-4o-mini --max-tokens 500'
 alias chatgpt4o='chatgpt.sh -i "respond in a simple and concise manner" --model chatgpt-4o-latest --max-tokens 250'
 
@@ -140,6 +144,9 @@ if [[ "$TERM" == "xterm-kitty" || "$TERM" == "xterm-256color" || "$TERM_PROGRAM"
 fi
 
 #eval "$(zoxide init zsh)"
+
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # 1) Plain function for loading conda
 function conda_on_demand_function() {

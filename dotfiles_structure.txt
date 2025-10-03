@@ -1,0 +1,555 @@
+.
+├── .bin
+│   ├── chatgpt.sh
+│   └── openai_api_key.txt.gpg
+├── bootstrap.sh
+├── .config
+│   ├── bat
+│   │   └── themes
+│   │       ├── Catppuccin Frappe.tmTheme
+│   │       ├── Catppuccin Latte.tmTheme
+│   │       ├── Catppuccin Macchiato.tmTheme
+│   │       └── Catppuccin Mocha.tmTheme
+│   ├── cava
+│   │   ├── config
+│   │   └── shaders
+│   │       ├── bar_spectrum.frag
+│   │       ├── northern_lights.frag
+│   │       └── pass_through.vert
+│   ├── eww
+│   │   ├── eww.scss
+│   │   ├── eww.yuck
+│   │   └── scripts
+│   │       ├── check_hardware.sh
+│   │       ├── connect_wifi.sh
+│   │       ├── get_battery.sh
+│   │       ├── get_brightness.sh
+│   │       ├── get_calendar.sh
+│   │       ├── get_network.sh
+│   │       ├── get_ssid.sh
+│   │       ├── get_volume.sh
+│   │       ├── get_workspaces.sh
+│   │       ├── list_wifi.sh
+│   │       ├── toggle_calendar.sh
+│   │       ├── toggle_mute.sh
+│   │       └── toggle_wifi_menu.sh
+│   ├── Ghost_Nord.toml
+│   ├── ghostty
+│   │   ├── config
+│   │   └── shaders
+│   │       └── retro_crt_bloom_barrel.glsl
+│   ├── hypr
+│   │   ├── hypridle.conf
+│   │   ├── hyprland.conf
+│   │   ├── hyprlock.conf
+│   │   ├── hyprpaper.conf
+│   │   ├── hyprpaper.md
+│   │   └── mocha.conf
+│   ├── kitty
+│   │   ├── kitty.conf
+│   │   ├── startup.session
+│   │   └── themes
+...
+│   ├── mpd
+│   │   └── mpd.conf
+│   ├── nvim
+│   │   ├── ftdetect
+│   │   │   └── cisco.vim
+│   │   ├── init.lua
+│   │   ├── lazy-lock.json
+│   │   ├── lua
+│   │   │   ├── custom
+│   │   │   │   └── autotag.lua
+│   │   │   └── dusts
+│   │   │       ├── core
+│   │   │       │   ├── init.lua
+│   │   │       │   ├── keymaps.lua
+│   │   │       │   ├── markdown_stripper.lua
+│   │   │       │   └── options.lua
+│   │   │       ├── lazy.lua
+│   │   │       └── plugins
+│   │   │           ├── bak.llm.bak
+│   │   │           ├── bak.llm.bak2
+│   │   │           ├── bak.llm.bak3
+│   │   │           ├── bak_llm_lua
+│   │   │           ├── bufferline.lua
+│   │   │           ├── chatgpt.lua
+│   │   │           ├── cisco.lua
+│   │   │           ├── colorizer.lua
+│   │   │           ├── colorscheme.lua
+│   │   │           ├── colorschemes
+│   │   │           │   └── fluoromachine
+│   │   │           ├── comment.lua
+│   │   │           ├── conform.lua
+│   │   │           ├── dressing.lua
+│   │   │           ├── eww.lua
+│   │   │           ├── floaterm.lua
+│   │   │           ├── flyboy.lua
+│   │   │           ├── gitsigns.lua
+│   │   │           ├── harpoon.lua
+│   │   │           ├── indent_blankline.lua
+│   │   │           ├── josean
+│   │   │           ├── llm.lua
+│   │   │           ├── lsp
+│   │   │           │   ├── lspconfig.lua
+│   │   │           │   ├── mason.lua
+│   │   │           │   └── none_ls.lua
+│   │   │           ├── lualine.lua
+│   │   │           ├── markdown_preview.lua
+│   │   │           ├── maximizer.lua
+│   │   │           ├── neoscroll.lua
+│   │   │           ├── noice.lua
+│   │   │           ├── nvim_cmp.lua
+│   │   │           ├── obsidian.lua
+│   │   │           ├── oil.lua
+│   │   │           ├── scope.lua
+│   │   │           ├── surround.lua
+│   │   │           ├── telescope.lua
+│   │   │           ├── tmux_navigator.lua
+│   │   │           ├── treesitter.lua
+│   │   │           ├── whichkey.lua
+│   │   │           └── zen.lua
+│   │   ├── pack
+│   │   │   └── Exafunction
+│   │   │       └── start
+│   │   │           └── codeium.vim
+│   │   └── syntax
+│   │       └── cisco.vim
+...
+│   ├── Pastel_Arch.toml
+│   ├── pavucontrol.ini
+│   ├── Slanted_Arch.toml
+│   ├── Slanted.toml
+│   ├── starship.toml
+│   ├── Tokyo_Night_Arch_2.toml
+│   ├── Tokyo_Night_Arch.toml
+│   ├── Typora
+│   │   └── themes
+│   │       ├── cement
+│   │       │   ├── cement.css
+│   │       │   ├── FiraCode-Regular.ttf
+│   │       │   ├── SourceHanSansCN-Light.otf
+│   │       │   ├── SourceHanSansCN-Medium.otf
+│   │       │   └── SourceHanSansCN-Normal.otf
+│   │       ├── cement.css
+│   │       ├── cement-dark.css
+│   │       ├── dracula
+│   │       │   ├── 400i.woff
+│   │       │   ├── 400.woff
+│   │       │   ├── 600i.woff
+│   │       │   ├── 700i.woff
+│   │       │   └── 700.woff
+│   │       ├── dracula.css
+│   │       ├── dropbox.css
+│   │       ├── fluent.css
+│   │       ├── fluent-light.css
+│   │       ├── github
+│   │       │   ├── open-sans-v17-latin-ext_latin-700italic.woff2
+│   │       │   ├── open-sans-v17-latin-ext_latin-700.woff2
+│   │       │   ├── open-sans-v17-latin-ext_latin-italic.woff2
+│   │       │   └── open-sans-v17-latin-ext_latin-regular.woff2
+│   │       ├── github.css
+│   │       ├── lapis
+│   │       │   ├── Cantarell-VF-fixed.otf
+│   │       │   ├── JetBrainsMono-Regular.ttf
+│   │       │   ├── SourceHanSerifCN-Bold.otf
+│   │       │   └── SourceHanSerifCN-Medium.otf
+│   │       ├── lapis.css
+│   │       ├── lapis-dark.css
+│   │       ├── magazine
+│   │       │   ├── 0xProto-Bold.woff2
+│   │       │   ├── 0xProto-Italic.woff2
+│   │       │   ├── 0xProto-Regular.woff2
+│   │       │   ├── magazine.css
+│   │       │   ├── SourceSans3-Italic-VariableFont_wght.ttf
+│   │       │   └── SourceSans3-VariableFont_wght.ttf
+│   │       ├── magazine_2.css
+│   │       ├── magazine_3.css
+│   │       ├── magazine_4.css
+│   │       ├── magazine.css
+│   │       ├── newsprint
+│   │       │   ├── pt-serif-v11-latin-700italic.woff2
+│   │       │   ├── pt-serif-v11-latin-700.woff2
+│   │       │   ├── pt-serif-v11-latin-italic.woff2
+│   │       │   └── pt-serif-v11-latin-regular.woff2
+│   │       ├── newsprint.css
+│   │       ├── night
+│   │       │   ├── codeblock.dark.css
+│   │       │   ├── credit.html
+│   │       │   ├── cursor@2x.png
+│   │       │   ├── cursor.png
+│   │       │   ├── mermaid.dark.css
+│   │       │   └── sourcemode.dark.css
+│   │       ├── night.css
+│   │       ├── nord
+│   │       │   ├── FiraCode-VF.woff2
+│   │       │   ├── Rubik-VF.woff2
+│   │       │   ├── SourceCodeVariable-Italic.woff2
+│   │       │   └── SourceCodeVariable-Roman.woff2
+│   │       ├── nord.css
+│   │       ├── notion-dark-classic.css
+│   │       ├── notion-dark-enhanced.css
+│   │       ├── notion-darker-classic.css
+│   │       ├── notion-darker-enhanced.css
+│   │       ├── notion-light-classic.css
+│   │       ├── notion-light-enhanced.css
+│   │       ├── novel-tex
+│   │       │   ├── basic
+│   │       │   │   ├── basic.css
+│   │       │   │   ├── code.css
+│   │       │   │   ├── font.css
+│   │       │   │   ├── footnote.css
+│   │       │   │   ├── include.css
+│   │       │   │   ├── list.css
+│   │       │   │   ├── math.css
+│   │       │   │   ├── mermaid.css
+│   │       │   │   ├── outline.css
+│   │       │   │   ├── quote.css
+│   │       │   │   ├── table.css
+│   │       │   │   ├── toc.css
+│   │       │   │   └── ui.css
+│   │       │   ├── dark
+│   │       │   │   ├── basic-dark-config.css
+│   │       │   │   └── code-dark.css
+│   │       │   └── light
+│   │       │       ├── basic-light-config.css
+│   │       │       └── code-light.css
+│   │       ├── novel-tex-f-d.css
+│   │       ├── novel-tex-f-l.css
+│   │       ├── novel-tex-n-d.css
+│   │       ├── novel-tex-n-l.css
+│   │       ├── old-themes
+│   │       │   ├── github
+│   │       │   │   ├── open-sans-v17-latin-ext_latin-700italic.woff2
+│   │       │   │   ├── open-sans-v17-latin-ext_latin-700.woff2
+│   │       │   │   ├── open-sans-v17-latin-ext_latin-italic.woff2
+│   │       │   │   └── open-sans-v17-latin-ext_latin-regular.woff2
+│   │       │   ├── github.css
+│   │       │   ├── newsprint
+│   │       │   │   ├── pt-serif-v11-latin-700italic.woff2
+│   │       │   │   ├── pt-serif-v11-latin-700.woff2
+│   │       │   │   ├── pt-serif-v11-latin-italic.woff2
+│   │       │   │   └── pt-serif-v11-latin-regular.woff2
+│   │       │   ├── newsprint.css
+│   │       │   ├── night
+│   │       │   │   ├── codeblock.dark.css
+│   │       │   │   ├── credit.html
+│   │       │   │   ├── cursor@2x.png
+│   │       │   │   ├── cursor.png
+│   │       │   │   ├── mermaid.dark.css
+│   │       │   │   └── sourcemode.dark.css
+│   │       │   ├── night.css
+│   │       │   ├── pixyll
+│   │       │   │   ├── lato-v14-latin-300italic.woff
+│   │       │   │   ├── lato-v14-latin-300.woff
+│   │       │   │   ├── lato-v14-latin-900italic.woff
+│   │       │   │   ├── lato-v14-latin-900.woff
+│   │       │   │   ├── merriweather-v19-latin-300italic.woff
+│   │       │   │   ├── merriweather-v19-latin-300.woff
+│   │       │   │   ├── merriweather-v19-latin-700italic.woff
+│   │       │   │   └── merriweather-v19-latin-700.woff
+│   │       │   ├── pixyll.css
+│   │       │   ├── Readme.md
+│   │       │   └── whitey.css
+│   │       ├── orangeheart.css
+│   │       ├── paper
+│   │       │   ├── cmunbi.ttf
+│   │       │   ├── cmunbx.ttf
+│   │       │   ├── cmunrm.ttf
+│   │       │   └── cmunti.ttf
+│   │       ├── paper.css
+│   │       ├── pixyll
+│   │       │   ├── lato-v14-latin-300italic.woff
+│   │       │   ├── lato-v14-latin-300.woff
+│   │       │   ├── lato-v14-latin-900italic.woff
+│   │       │   ├── lato-v14-latin-900.woff
+│   │       │   ├── merriweather-v19-latin-300italic.woff
+│   │       │   ├── merriweather-v19-latin-300.woff
+│   │       │   ├── merriweather-v19-latin-700italic.woff
+│   │       │   └── merriweather-v19-latin-700.woff
+│   │       ├── pixyll_code_blocks.css
+│   │       ├── pixyll.css
+│   │       ├── Readme.md
+│   │       ├── typora-indigo.css
+│   │       ├── vercel
+│   │       │   ├── GeistMono[wght].woff2
+│   │       │   ├── Geist[wght].woff2
+│   │       │   ├── iconfont.woff2
+│   │       │   ├── InterVariable-Italic.woff2
+│   │       │   ├── LXGWWenKaiMono-Regular.ttf
+│   │       │   └── LXGWWenKai-Regular.ttf
+│   │       ├── vercel.css
+│   │       ├── vercel_no_shadow.css
+│   │       └── whitey.css
+│   ├── waybar
+│   │   ├── config.jsonc
+│   │   ├── mocha.css
+│   │   └── style.css
+│   ├── wofi
+│   │   ├── catppuccin
+│   │   ├── config
+│   │   ├── old
+│   │   ├── old.css
+│   │   └── style.css
+│   ├── xsettingsd
+│   │   └── xsettingsd.conf
+│   └── zsh
+│       └── plugins
+│           ├── zsh-autosuggestions
+...
+│           ├── zsh-completions
+...
+│           ├── zsh-groq-llm
+...
+│           └── zsh-syntax-highlighting
+...
+├── .dir_colors
+├── dotfiles_structure.txt
+├── .fonts
+│   ├── 0xProtoNerdFont-Bold.ttf
+│   ├── 0xProtoNerdFont-Italic.ttf
+│   ├── 0xProtoNerdFontMono-Bold.ttf
+│   ├── 0xProtoNerdFontMono-Italic.ttf
+│   ├── 0xProtoNerdFontMono-Regular.ttf
+│   ├── 0xProtoNerdFontPropo-Bold.ttf
+│   ├── 0xProtoNerdFontPropo-Italic.ttf
+│   ├── 0xProtoNerdFontPropo-Regular.ttf
+│   ├── 0xProtoNerdFont-Regular.ttf
+│   ├── DaddyTimeMonoNerdFontMono-Regular.ttf
+│   ├── DaddyTimeMonoNerdFontPropo-Regular.ttf
+│   ├── DaddyTimeMonoNerdFont-Regular.ttf
+│   ├── JetBrainsMonoNerdFont-BoldItalic.ttf
+│   ├── JetBrainsMonoNerdFont-Bold.ttf
+│   ├── JetBrainsMonoNerdFont-ExtraBoldItalic.ttf
+│   ├── JetBrainsMonoNerdFont-ExtraBold.ttf
+│   ├── JetBrainsMonoNerdFont-ExtraLightItalic.ttf
+│   ├── JetBrainsMonoNerdFont-ExtraLight.ttf
+│   ├── JetBrainsMonoNerdFont-Italic.ttf
+│   ├── JetBrainsMonoNerdFont-LightItalic.ttf
+│   ├── JetBrainsMonoNerdFont-Light.ttf
+│   ├── JetBrainsMonoNerdFont-MediumItalic.ttf
+│   ├── JetBrainsMonoNerdFont-Medium.ttf
+│   ├── JetBrainsMonoNerdFontMono-BoldItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-Bold.ttf
+│   ├── JetBrainsMonoNerdFontMono-ExtraBoldItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-ExtraBold.ttf
+│   ├── JetBrainsMonoNerdFontMono-ExtraLightItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-ExtraLight.ttf
+│   ├── JetBrainsMonoNerdFontMono-Italic.ttf
+│   ├── JetBrainsMonoNerdFontMono-LightItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-Light.ttf
+│   ├── JetBrainsMonoNerdFontMono-MediumItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-Medium.ttf
+│   ├── JetBrainsMonoNerdFontMono-Regular.ttf
+│   ├── JetBrainsMonoNerdFontMono-SemiBoldItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-SemiBold.ttf
+│   ├── JetBrainsMonoNerdFontMono-ThinItalic.ttf
+│   ├── JetBrainsMonoNerdFontMono-Thin.ttf
+│   ├── JetBrainsMonoNerdFontPropo-BoldItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-Bold.ttf
+│   ├── JetBrainsMonoNerdFontPropo-ExtraBoldItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-ExtraBold.ttf
+│   ├── JetBrainsMonoNerdFontPropo-ExtraLightItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-ExtraLight.ttf
+│   ├── JetBrainsMonoNerdFontPropo-Italic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-LightItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-Light.ttf
+│   ├── JetBrainsMonoNerdFontPropo-MediumItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-Medium.ttf
+│   ├── JetBrainsMonoNerdFontPropo-Regular.ttf
+│   ├── JetBrainsMonoNerdFontPropo-SemiBoldItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-SemiBold.ttf
+│   ├── JetBrainsMonoNerdFontPropo-ThinItalic.ttf
+│   ├── JetBrainsMonoNerdFontPropo-Thin.ttf
+│   ├── JetBrainsMonoNerdFont-Regular.ttf
+│   ├── JetBrainsMonoNerdFont-SemiBoldItalic.ttf
+│   ├── JetBrainsMonoNerdFont-SemiBold.ttf
+│   ├── JetBrainsMonoNerdFont-ThinItalic.ttf
+│   ├── JetBrainsMonoNerdFont-Thin.ttf
+│   ├── JetBrainsMonoNLNerdFont-BoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-Bold.ttf
+│   ├── JetBrainsMonoNLNerdFont-ExtraBoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-ExtraBold.ttf
+│   ├── JetBrainsMonoNLNerdFont-ExtraLightItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-ExtraLight.ttf
+│   ├── JetBrainsMonoNLNerdFont-Italic.ttf
+│   ├── JetBrainsMonoNLNerdFont-LightItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-Light.ttf
+│   ├── JetBrainsMonoNLNerdFont-MediumItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-Medium.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-BoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-Bold.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-ExtraBoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-ExtraBold.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-ExtraLightItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-ExtraLight.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-Italic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-LightItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-Light.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-MediumItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-Medium.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-Regular.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-SemiBoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-SemiBold.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-ThinItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontMono-Thin.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-BoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-Bold.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-ExtraBoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-ExtraBold.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-ExtraLightItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-ExtraLight.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-Italic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-LightItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-Light.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-MediumItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-Medium.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-Regular.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-SemiBoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-SemiBold.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-ThinItalic.ttf
+│   ├── JetBrainsMonoNLNerdFontPropo-Thin.ttf
+│   ├── JetBrainsMonoNLNerdFont-Regular.ttf
+│   ├── JetBrainsMonoNLNerdFont-SemiBoldItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-SemiBold.ttf
+│   ├── JetBrainsMonoNLNerdFont-ThinItalic.ttf
+│   ├── JetBrainsMonoNLNerdFont-Thin.ttf
+│   ├── meslo_nerd_fonts_regular.ttf
+│   ├── SauceCodeProNerdFontMono-Regular.ttf
+│   └── SFProDisplayNerdFont
+│       ├── SFProDisplayNerdFont-BlackItalic.otf
+│       ├── SFProDisplayNerdFont-Black.otf
+│       ├── SFProDisplayNerdFont-BoldItalic.otf
+│       ├── SFProDisplayNerdFont-Bold.otf
+│       ├── SFProDisplayNerdFont-HeavyItalic.otf
+│       ├── SFProDisplayNerdFont-Heavy.otf
+│       ├── SFProDisplayNerdFont-Italic.otf
+│       ├── SFProDisplayNerdFont-LightItalic.otf
+│       ├── SFProDisplayNerdFont-Light.otf
+│       ├── SFProDisplayNerdFont-MediumItalic.otf
+│       ├── SFProDisplayNerdFont-Medium.otf
+│       ├── SFProDisplayNerdFontPropo-BlackItalic.otf
+│       ├── SFProDisplayNerdFontPropo-Black.otf
+│       ├── SFProDisplayNerdFontPropo-BoldItalic.otf
+│       ├── SFProDisplayNerdFontPropo-Bold.otf
+│       ├── SFProDisplayNerdFontPropo-HeavyItalic.otf
+│       ├── SFProDisplayNerdFontPropo-Heavy.otf
+│       ├── SFProDisplayNerdFontPropo-Italic.otf
+│       ├── SFProDisplayNerdFontPropo-LightItalic.otf
+│       ├── SFProDisplayNerdFontPropo-Light.otf
+│       ├── SFProDisplayNerdFontPropo-MediumItalic.otf
+│       ├── SFProDisplayNerdFontPropo-Medium.otf
+│       ├── SFProDisplayNerdFontPropo-Regular.otf
+│       ├── SFProDisplayNerdFontPropo-SemiBoldItalic.otf
+│       ├── SFProDisplayNerdFontPropo-SemiBold.otf
+│       ├── SFProDisplayNerdFontPropo-ThinItalic.otf
+│       ├── SFProDisplayNerdFontPropo-Thin.otf
+│       ├── SFProDisplayNerdFontPropo-UltraLightItalic.otf
+│       ├── SFProDisplayNerdFontPropo-UltraLight.otf
+│       ├── SFProDisplayNerdFont-Regular.otf
+│       ├── SFProDisplayNerdFont-SemiBoldItalic.otf
+│       ├── SFProDisplayNerdFont-SemiBold.otf
+│       ├── SFProDisplayNerdFont-ThinItalic.otf
+│       ├── SFProDisplayNerdFont-Thin.otf
+│       ├── SFProDisplayNerdFont-UltraLightItalic.otf
+│       └── SFProDisplayNerdFont-UltraLight.otf
+├── .git
+...
+├── .gitignore
+├── install_neovim_bin_linux.sh
+├── .local
+│   ├── share
+│   │   ├── icons
+│   │   │   ├── WhiteSur-cursors
+│   │   │   └── WhiteSur-dark
+│   │   └── themes
+│   │       └── Nordic-darker
+...
+│       └── syncthing
+│           ├── config.xml
+│           └── .gitignore
+├── Pictures
+│   └── Wallpapers
+│       ├── 5052744618_53f57c7a5b_o.jpg
+│       ├── Cyberpunk_Van_Building_1366x768.png
+│       ├── Cyberpunk_Van_Building.png
+│       ├── Dome-1-dragged.jpg
+│       ├── Dome-2-dragged.jpg
+│       ├── Room_View_City_Cyberpunk_1366x768.jpg
+│       ├── Room_View_City_Cyberpunk.jpg
+│       ├── Sequoia-Sunrise_1366x768.png
+│       ├── Sequoia-Sunrise.png
+│       ├── ytkkbowirm061_1366x768.jpg
+│       └── ytkkbowirm061.jpg
+├── README.md
+├── Scripts
+│   ├── ai_scraper.py
+│   ├── apply_renames.py
+│   ├── backup_dotfiles.sh
+│   ├── backup_home_b2.py
+│   ├── backup_home_dir.sh
+│   ├── clean_markdown_inline_images.py
+│   ├── clock.sh
+│   ├── cmatrix.sh
+│   ├── combine_all_cisco_to_markdown.sh
+│   ├── combine_all_markdown.sh
+│   ├── combine_all_text.sh
+│   ├── convert_all_html_to_markdown.sh
+│   ├── copy.sh
+│   ├── create_transcripts.sh
+│   ├── current_directory_docx_to_markdown.sh
+│   ├── desktop_shortcut_wrapper_maker.sh
+│   ├── dictionary.py
+│   ├── dictionary.sh
+│   ├── filezilla_queue_reader
+│   ├── fix_shebangs_nixos.sh
+│   ├── fix_video_reference_leading_zeros.sh
+│   ├── get_current_ssid.sh
+│   ├── html_to_md.py
+│   ├── image_link_random_time_downloader.py
+│   ├── install_codeium.sh
+│   ├── install_xbox_achievement_font.sh
+│   ├── launch_left.sh
+│   ├── make_html_files_from_directory_list_file.sh
+│   ├── make_text_files.sh
+│   ├── markdown_image_link_embedding_localizer.py
+│   ├── markdown_image_link_extractor.py
+│   ├── markdown_scraper_2.py
+│   ├── markdown_scraper_3.py
+│   ├── markdown_scraper.py
+│   ├── matrix_screensaver.sh
+│   ├── monitors.sh
+│   ├── mpd_toggle.sh
+│   ├── notes_finder.py
+│   ├── output_date.sh
+│   ├── pdf2md.py
+│   ├── rename_videos_from_md_references.py
+│   ├── scan_and_map.py
+│   ├── scraper_link.py
+│   ├── script.py
+│   ├── search_weekly_update.py
+│   ├── show_renamer.py
+│   ├── sort_link_list.py
+│   ├── ttyclock.sh
+│   ├── volume.sh
+│   ├── weekly_script.sh
+│   ├── weekly_update_notes_finder.sh
+│   ├── wifi_status.sh
+│   ├── window_title.sh
+│   └── zero_pad_filenames.sh
+├── secrets.yaml
+├── .sops.yaml
+├── .tmux
+│   └── plugins
+│       ├── tmux
+...
+│       ├── tmux-weather
+...
+│       ├── tpm
+...
+│       └── vim-tmux-navigator
+...
+├── .tmux.conf
+└── .zshrc
+
+321 directories, 14578 files
