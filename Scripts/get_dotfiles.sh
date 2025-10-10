@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${REPO_URL:-https://github.com/<you>/<repo>.git}"
+REPO_URL="${REPO_URL:-https://github.com/manuelparra1/dotfiles.git}"
 TARGET_DIR="${HOME}/.local/share/dotfiles"
 
 need() { command -v "$1" >/dev/null 2>&1 || { echo "Missing $1; please install it first."; exit 1; }; }
