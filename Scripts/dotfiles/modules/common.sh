@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+: "${REPO_ROOT:=${DOTS_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")"/../../.. && pwd)}}"
+: "${DOTS_ROOT:=${REPO_ROOT}}"
+export REPO_ROOT DOTS_ROOT
 
 # Logging
 say()   { printf "\033[1;36m==>\033[0m %s\n" "$*"; }
