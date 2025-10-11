@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  printf "\033[1;31m[ERROR]\033[0m This script is a module and is not meant to be run directly.\n"
+  printf "Please execute the main installer script:\n"
+  printf "  ./install_dotfiles.sh\n"
+  exit 1
+fi
 # Module: zsh + configs + quality-of-life bits
 # Expects common helpers from install_dotfiles:
 #   say, warn, die, do_run, deploy_set, deploy, pkg_install, have

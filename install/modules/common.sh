@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  printf "\033[1;31m[ERROR]\033[0m This script is a module and is not meant to be run directly.\n"
+  printf "Please execute the main installer script:\n"
+  printf "  ./install_dotfiles.sh\n"
+  exit 1
+fi
 set -euo pipefail
 : "${REPO_ROOT:=${DOTS_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")"/../../.. && pwd)}}"
 : "${DOTS_ROOT:=${REPO_ROOT}}"
@@ -128,6 +134,18 @@ deploy() {
   local src="$1" dest="$2"
   local parent; parent="$(dirname "$dest")"
   [[ -d "$parent" ]] || do_run mkdir -p "$parent"
+
+  # --- safety check for symlink loops ---
+  # If a parent of the destination is already a link, this file is likely covered.
+  local check_parent="$parent"
+  while [[ "$check_parent" != "/" && "$check_parent" != "." && -n "$check_parent" ]]; do
+    if [[ -L "$check_parent" ]]; then
+      warn "Parent '$check_parent' is a symlink; skipping deploy for '$dest' to avoid loops."
+      return 0
+    fi
+    check_parent="$(dirname "$check_parent")"
+  done
+  # --- end safety check ---
 
   if [[ -e "$dest" || -L "$dest" ]]; then
     do_run mv -f "$dest" "${dest}.bak.$(date +%s)"

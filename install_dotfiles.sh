@@ -3,25 +3,11 @@ set -euo pipefail
 
 # ============================================================
 # Dotfiles Installer (interactive + modular)
-# Layout expectations:
-#   repo/
-#     install_dotfiles                  <-- this file
-#     Scripts/
-#       get-dotfiles.sh                 <-- curlable bootstrap (see below)
-#       dotfiles/
-#         modules/
-#           common.sh
-#           base_packages.sh
-#           neovim.sh
-#           zsh.sh
-#           starship.sh
-#     .config/ ...                      <-- your configs
-#     .zshrc, .gitconfig, .tmux.conf, … <-- hidden files ok
 # ============================================================
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STD_DIR="${HOME}/.local/share/dotfiles"
-MODULES_DIR_REL="Scripts/dotfiles/modules"
+MODULES_DIR_REL="install/modules"
 MODULES_DIR="${REPO_ROOT}/${MODULES_DIR_REL}"
 
 DEFAULT_MODE="link"   # link|copy
@@ -53,15 +39,19 @@ usage() {
 Usage: $(basename "$0") [options] [modules...]
 
 Modules:
-  base        Install base tools + uv dirs, etc.
-  neovim      Install Neovim (stable by default) + config
-  zsh         Install Zsh + .zshrc + plugins/customizations
-  starship    Install Starship prompt + config
-  scripts     Copy repo ./Scripts -> ~/Scripts (common scripts)
-  all         Run base + neovim + zsh + starship + scripts
+  base          Install base tools + uv dirs, etc.
+  neovim        Install Neovim (stable by default) + config
+  zsh           Install Zsh + .zshrc + plugins/customizations
+  starship      Install Starship prompt + config
+  scripts       Copy repo ./Scripts -> ~/Scripts (common scripts)
+  secrets       Install sops and decrypt secrets.yaml
+  edit-secrets  Decrypt and open secrets.yaml for editing
+  backup        Create a full backup of existing dotfiles
+  uninstall     Remove all installed dotfiles and configurations
+  all           Run all of the above (excluding edit-secrets, uninstall, backup)
 
 Options:
-  --all                 Install everything
+  --all                 Install everything (excluding edit-secrets, uninstall, backup)
   --neovim-nightly      Force Neovim nightly
   --neovim-stable       Force Neovim stable (default)
   --mode link|copy      Deploy method (default: link; prompts if not set)
@@ -81,8 +71,8 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --all) ALL_FLAG=1 ;;
-    all) REQUESTED_MODULES=(base neovim zsh starship scripts) ;;
-    base|neovim|zsh|starship|scripts) REQUESTED_MODULES+=("$1") ;;
+    all) REQUESTED_MODULES=(base neovim zsh starship scripts secrets) ;;
+    base|neovim|zsh|starship|scripts|secrets|edit-secrets|uninstall|backup) REQUESTED_MODULES+=("$1") ;;
     --neovim-nightly) NVIM_CHANNEL="nightly" ;;
     --neovim-stable)  NVIM_CHANNEL="stable" ;;
     --mode) MODE="${2:-link}"; shift ;;
@@ -110,7 +100,7 @@ standardize_location() {
           if [[ "${del:-N}" =~ ^[yY]$ ]]; then
             do_run rm -rf "${REPO_ROOT}"
           fi
-          exec "${STD_DIR}/install_dotfiles" "$@"
+          exec "${STD_DIR}/install_dotfiles.sh" "$@"
           ;;
     esac
   fi
@@ -130,7 +120,7 @@ interactive_menu() {
   if have fzf; then
     local choice
     choice="$(
-      printf "base\tBase tools + uv\nneovim\tNeovim + config\nzsh\tZsh + .zshrc\nstarship\tStarship prompt + config\nscripts\tCopy ./Scripts to ~/Scripts\n" \
+      printf "backup\tBackup existing dotfiles\nbase\tBase tools + uv\nneovim\tNeovim + config\nzsh\tZsh + .zshrc\nstarship\tStarship prompt + config\nscripts\tCopy ./Scripts to ~/Scripts\nsecrets\tDecrypt secrets file\nedit-secrets\tEdit the secrets file\nuninstall\tRemove all dotfiles configs\n" \
         | column -t -s $'\t' \
         | fzf --multi --prompt="Select modules (TAB multi-select, ENTER confirm): " \
               --header="ESC cancels" \
@@ -145,18 +135,22 @@ interactive_menu() {
     fi
   else
     # Simple fallback
-    local opts=("base" "neovim" "zsh" "starship" "scripts" "done")
+    local opts=("backup" "base" "neovim" "zsh" "starship" "scripts" "secrets" "edit-secrets" "uninstall" "done")
     while :; do
       echo "Add a module (type number):"
       local i=1; for o in "${opts[@]}"; do echo "  $i) $o"; ((i++)); done
       read -r -p "> " ans
       case "$ans" in
-        1) picks+=("base") ;;
-        2) picks+=("neovim"); read -r -p "Neovim channel [stable/nightly] (default: stable): " ch; NVIM_CHANNEL="${ch:-stable}" ;;
-        3) picks+=("zsh") ;;
-        4) picks+=("starship") ;;
-        5) picks+=("scripts") ;;
-        6) break ;;
+        1) picks+=("backup") ;;
+        2) picks+=("base") ;;
+        3) picks+=("neovim"); read -r -p "Neovim channel [stable/nightly] (default: stable): " ch; NVIM_CHANNEL="${ch:-stable}" ;;
+        4) picks+=("zsh") ;;
+        5) picks+=("starship") ;;
+        6) picks+=("scripts") ;;
+        7) picks+=("secrets") ;;
+        8) picks+=("edit-secrets") ;;
+        9) picks+=("uninstall") ;;
+        10) break ;;
         *) echo "Invalid." ;;
       esac
     done
@@ -172,7 +166,12 @@ if [[ $ALL_FLAG -eq 1 ]]; then
 fi
 # If nothing specified, go interactive
 if [[ ${#REQUESTED_MODULES[@]} -eq 0 ]]; then
-  interactive_menu
+  read -r -p "Install all modules (base, neovim, zsh, starship, scripts)? (Y/n): " ans
+  if [[ ! "${ans:-Y}" =~ ^[nN]$ ]]; then
+    REQUESTED_MODULES=(base neovim zsh starship scripts)
+  else
+    interactive_menu
+  fi
 fi
 
 # ---------- Prompt: link vs copy (if not explicitly provided) ----------
@@ -243,28 +242,37 @@ sanitize_user_paths() {
 deploy_hidden_dot_things() {
   say "Scanning for hidden files/dirs at repo root…"
   shopt -s dotglob nullglob
-  local items=("${REPO_ROOT}"/.*)
-  shopt -u dotglob
-  local picks=()
-  for p in "${items[@]}"; do
+  local items_to_deploy=()
+  
+  # Find all hidden items at the root
+  for p in "${REPO_ROOT}"/.*; do
     local base; base="$(basename "$p")"
-    # skip git internals & this installer
-    [[ "$base" =~ ^(\.|..|.git|.github|.gitignore|.gitmodules)$ ]] && continue
-    # only files/dirs you likely want
+    # Skip git internals, this installer, and the special-cased .config
+    [[ "$base" =~ ^(\.|..|.git|.github|.gitignore|.gitmodules|.config)$ ]] && continue
     if [[ -f "$p" || -d "$p" ]]; then
-      picks+=("$base")
+      items_to_deploy+=("$base")
     fi
   done
-  [[ ${#picks[@]} -eq 0 ]] && { say "No hidden items found to deploy."; return; }
+
+  # Handle .config separately for a "merge" strategy
+  if [[ -d "${REPO_ROOT}/.config" ]]; then
+    say "Found .config directory, will merge its contents."
+    for p in "${REPO_ROOT}"/.config/*; do
+      local base; base="$(basename "$p")"
+      items_to_deploy+=(".config/${base}")
+    done
+  fi
+  
+  [[ ${#items_to_deploy[@]} -eq 0 ]] && { say "No hidden items found to deploy."; return; }
 
   echo
-  echo "Found these hidden files/dirs to deploy into \$HOME:"
-  printf '  - %s\n' "${picks[@]}"
+  echo "Found these items to deploy into your HOME directory:"
+  printf '  - ~/%s\n' "${items_to_deploy[@]}"
   read -r -p "Deploy all of the above? (Y/n): " ans
   if [[ ! "${ans:-Y}" =~ ^[nN]$ ]]; then
     local specs=()
-    for b in "${picks[@]}"; do
-      specs+=("${b}:${HOME}/${b}")
+    for item in "${items_to_deploy[@]}"; do
+      specs+=("${item}:${HOME}/${item}")
     done
     deploy_set "${specs[@]}"
   fi
