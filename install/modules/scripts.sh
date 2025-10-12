@@ -30,8 +30,14 @@ fi
 # --- ensure all files in ~/Scripts are executable ---
 if [[ -d "${HOME}/Scripts" ]]; then
   say "Ensuring all user scripts are executable"
-  # We exclude dotfiles and non-executable formats.
-  do_run find "${HOME}/Scripts" -type f ! -name '.*' ! -name '*.md' ! -name '*.txt' -exec chmod +x {} \;
+  # Skip hidden paths and common text formats before toggling executability.
+  while IFS= read -r -d '' script_path; do
+    [[ -x "$script_path" ]] || do_run chmod +x "$script_path"
+  done < <(
+    find "${HOME}/Scripts" \
+      \( -path '*/.*' -prune \) -o \
+      \( -type f ! -name '*.md' ! -name '*.txt' -print0 \)
+  )
 fi
 
 # --- optional: link each script in a dedicated bin folder to ~/.local/bin ---
@@ -40,8 +46,7 @@ if [[ -d "${HOME}/Scripts/bin" ]]; then
   say "Linking executables from ~/Scripts/bin into ~/.local/bin"
   for f in "${HOME}/Scripts/bin/"*; do
     [[ -f "$f" && -x "$f" ]] || continue
-    local dest="${HOME}/.local/bin/$(basename "$f")"
-    do_run ln -sf "$f" "$dest"
+    do_run ln -sf "$f" "${HOME}/.local/bin/$(basename "$f")"
   done
 fi
 
@@ -51,10 +56,9 @@ fi
 # --- optional: look for .desktop templates under Scripts/applications/ ---
 # Use this to autoinstall launchers for apps you store in ~/Apps
 if [[ -d "${REPO_ROOT}/Scripts/applications" ]]; then
-  local dest="${HOME}/.local/share/applications"
-  do_run mkdir -p "$dest"
-  say "Deploying custom .desktop entries to $dest"
-  do_run rsync -a --delete "${REPO_ROOT}/Scripts/applications/" "$dest/"
+  do_run mkdir -p "${HOME}/.local/share/applications"
+  say "Deploying custom .desktop entries to ${HOME}/.local/share/applications"
+  do_run rsync -a --delete "${REPO_ROOT}/Scripts/applications/" "${HOME}/.local/share/applications/"
 fi
 
 say "Scripts module complete."
