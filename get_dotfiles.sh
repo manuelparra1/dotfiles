@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_URL="${REPO_URL:-https://github.com/manuelparra1/dotfiles.git}"
-TARGE T_DIR="${HOME}/.local/share/dotfiles"
+TARGET_DIR="${HOME}/.local/share/dotfiles"
 
 # --- Helper functions ---
 say() { printf "\033[1;36m==>\033[0m %s\n" "$*"; }
