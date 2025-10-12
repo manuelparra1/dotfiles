@@ -33,6 +33,32 @@ do_run() {
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+resolve_path() {
+  local target="$1"
+  if command -v realpath >/dev/null 2>&1; then
+    realpath -m "$target"
+    return
+  fi
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - "$target" <<'PY'
+import os
+import sys
+print(os.path.realpath(sys.argv[1]))
+PY
+    return
+  fi
+  if command -v python >/dev/null 2>&1; then
+    python - "$target" <<'PY'
+import os
+import sys
+print(os.path.realpath(sys.argv[1]))
+PY
+    return
+  fi
+  # Fallback: use a subshell to resolve relative paths
+  (cd "$(dirname "$target")" 2>/dev/null && printf '%s\n' "$(pwd)/$(basename "$target")")
+}
+
 # ---------- Usage ----------
 usage() {
   cat <<EOF
@@ -205,6 +231,22 @@ deploy() {
   local src="$1" dest="$2"
   local parent; parent="$(dirname "$dest")"
   [[ -d "$parent" ]] || do_run mkdir -p "$parent"
+  if [[ -L "$src" ]]; then
+    local link_target
+    link_target="$(readlink "$src")"
+    local abs_link
+    if [[ "$link_target" == /* ]]; then
+      abs_link="$link_target"
+    else
+      abs_link="$(cd "$(dirname "$src")" && resolve_path "$link_target")"
+    fi
+    local abs_dest
+    abs_dest="$(resolve_path "$dest")"
+    if [[ -n "$abs_link" && -n "$abs_dest" && "$abs_link" == "$abs_dest" ]]; then
+      warn "Skipping deploy of $src to $dest because source symlink resolves to destination (would create loop)."
+      return
+    fi
+  fi
   if [[ -e "$dest" || -L "$dest" ]]; then
     do_run mv -f "$dest" "${dest}.bak.$(date +%s)"
   fi
@@ -259,6 +301,8 @@ deploy_hidden_dot_things() {
     say "Found .config directory, will merge its contents."
     for p in "${REPO_ROOT}"/.config/*; do
       local base; base="$(basename "$p")"
+      [[ "$base" == "starship.toml" ]] && continue
+      [[ "$base" == "starship" ]] && continue
       items_to_deploy+=(".config/${base}")
     done
   fi
