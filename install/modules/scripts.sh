@@ -40,7 +40,7 @@ if [[ -d "${HOME}/Scripts/bin" ]]; then
   say "Linking executables from ~/Scripts/bin into ~/.local/bin"
   for f in "${HOME}/Scripts/bin/"*; do
     [[ -f "$f" && -x "$f" ]] || continue
-    local dest="${HOME}/.local/bin/$(basename "$f")"
+    dest="${HOME}/.local/bin/$(basename "$f")"
     do_run ln -sf "$f" "$dest"
   done
 fi
@@ -51,7 +51,7 @@ fi
 # --- optional: look for .desktop templates under Scripts/applications/ ---
 # Use this to autoinstall launchers for apps you store in ~/Apps
 if [[ -d "${REPO_ROOT}/Scripts/applications" ]]; then
-  local dest="${HOME}/.local/share/applications"
+  dest="${HOME}/.local/share/applications"
   do_run mkdir -p "$dest"
   say "Deploying custom .desktop entries to $dest"
   do_run rsync -a --delete "${REPO_ROOT}/Scripts/applications/" "$dest/"

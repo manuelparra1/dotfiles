@@ -75,7 +75,7 @@ install_neovim() {
 
   do_run mkdir -p "${NVIM_PREFIX}" "${BIN_DIR}"
   local workdir; workdir="$(mktemp -d)"
-  trap 'rm -rf "$workdir"' EXIT
+  trap '[[ -n "${workdir:-}" ]] && rm -rf "$workdir"' EXIT
 
   say "Downloading to temporary directory..."
   do_run curl -fL --retry 3 -o "${workdir}/${TARBALL}" "${URL}"
@@ -105,6 +105,8 @@ install_neovim() {
   do_run ln -sf "${target_dir}/bin/nvim" "${shim_path}"
 
   say "Neovim (${TAG}) installed successfully."
+  [[ -d "$workdir" ]] && rm -rf "$workdir"
+  trap - EXIT
   do_run "${shim_path}" --version | head -n 1
 }
 

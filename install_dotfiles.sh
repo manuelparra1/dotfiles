@@ -26,8 +26,13 @@ banner(){ printf "\n\033[1;35m==== %s ====\033[0m\n" "$*"; }
 do_run() {
   if [[ "${DRY}" -eq 1 ]]; then
     printf "[dry] %s\n" "$*"
+    return 0
+  fi
+
+  if [[ $# -eq 1 ]]; then
+    eval "$1"
   else
-    eval "$@"
+    "$@"
   fi
 }
 
