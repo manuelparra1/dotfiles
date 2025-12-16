@@ -42,4 +42,4 @@ opt.splitbelow = true -- split horizontal window to the bottom
 opt.swapfile = false
 
 -- command mode status height
-opt.cmdheight = 0
+opt.cmdheight = 2

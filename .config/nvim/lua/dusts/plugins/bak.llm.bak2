@@ -163,7 +163,7 @@ return {
 			},
 			qwen3 = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "qwen/qwen3-4b:free",
+				-- model = "qwen/qwen3-4b:free",
 				-- model = "qwen/qwen3-8b:free",
 				-- model = "qwen/qwen3-14b:free",
 				-- model = "qwen/qwen3-32b:free",
@@ -211,7 +211,7 @@ return {
 				-- -------------------------------------------------------------
 				--
 				-- =============================================================
-				-- model = "qwen/qwen3-30b-a3b",
+				model = "qwen/qwen3-30b-a3b",
 				-- =============================================================
 				-- Cost = $0.10/$0.30 vs.
 				-- -------------------------------------------------------------
@@ -272,6 +272,11 @@ return {
 			r1_t2 = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
 				model = "tngtech/deepseek-r1t2-chimera:free",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			tiny_qwen3 = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "qwen/qwen3-4b:free",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
 			tiny_llama = {
@@ -472,7 +477,7 @@ return {
 				-- url = "http://10.0.0.103:11434/v1/chat/completions",
 				url = "http://127.0.0.1:11434/v1/chat/completions",
 				-- model = "qwen3:8b",
-				model = "qwen3:0.6b",
+				model = "gpt-oss:20b",
 				api_key_name = "OLLAMA_API_KEY",
 			},
 		}
@@ -994,7 +999,7 @@ return {
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
-		end, { desc = "Append Qwen3-4B response after selection (notes)" })
+		end, { desc = "Append qwen3-30b-a3b response after selection (notes)" })
 		--
 		-- Append Grok response after selection
 		--
@@ -1039,7 +1044,7 @@ return {
 		--
 		vim.keymap.set("v", "<leader>no", function()
 			llm.prompt_selection_only_append({
-				service = "openrouter",
+				service = "ollama_notes",
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
@@ -1064,6 +1069,15 @@ return {
 		end, { desc = "Append Mistral Nemo response after visual selection" })
 		--
 		-- Append AI response after selection
+		vim.keymap.set("v", "<leader>tqw", function()
+			llm.prompt_selection_only_append({
+				service = "tiny_qwen3",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append qwen3-4b response after visual selection" })
+		--
+		-- Append AI response after selection
 		vim.keymap.set("v", "<leader>tlm", function()
 			llm.prompt_selection_only_append({
 				service = "tiny_llama",
@@ -1073,7 +1087,7 @@ return {
 		end, { desc = "Append Llama 3.2 3B response after visual selection" })
 		--
 		-- Append AI response after selection
-		vim.keymap.set("v", "<leader>idv", function()
+		vim.keymap.set("v", "<leader>tdv", function()
 			llm.prompt_selection_only_append({
 				service = "devstral",
 				system_prompt = note_system_prompt,
@@ -1082,7 +1096,7 @@ return {
 		end, { desc = "Append Devstral Small 24B response after visual selection" })
 		--
 		-- Append AI response after selection
-		vim.keymap.set("v", "<leader>icd", function()
+		vim.keymap.set("v", "<leader>tcd", function()
 			llm.prompt_selection_only_append({
 				service = "codestral",
 				system_prompt = note_system_prompt,
@@ -1091,7 +1105,7 @@ return {
 		end, { desc = "Append Codestral 22B response after visual selection" })
 		--
 		-- Append AI response after selection
-		vim.keymap.set("v", "<leader>itt", function()
+		vim.keymap.set("v", "<leader>trt", function()
 			llm.prompt_selection_only_append({
 				service = "r1_t2",
 				system_prompt = note_system_prompt,
@@ -1107,7 +1121,7 @@ return {
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
-		end, { desc = "Append Mistral Small response after selection (notes)" })
+		end, { desc = "Append Mistral Medium response after selection (notes)" })
 		--
 		-- Append Lambda response after selection
 		--

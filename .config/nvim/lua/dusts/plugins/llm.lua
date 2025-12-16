@@ -10,55 +10,110 @@ return {
 		-- LLM Service Configuration
 		-- =============================================================================
 		local service_lookup = {
+			perplexity_deep_research = {
+				model = "perplexity/sonar-deep-research",
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			deepseek = {
+				url = "https://api.deepseek.com/v1/chat/completions",
+				--
+				-- ($0.28/$0.42)
+				model = "deepseek-chat",
+				api_key_name = "DEEPSEEK_API_KEY",
+			},
+			gpt_5 = {
+				url = "https://api.openai.com/v1/chat/completions",
+				--
+				-- ($0.05/$0.40)
+				model = "gpt-5-nano",
+				api_key_name = "OPENAI_API_KEY",
+			},
+			openrouter = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				--
+				-- model = "allenai/olmo-3-32b-think:free",
+				--
+				-- ($0.02/$0.02)
+				-- model = "meta-llama/llama-3.2-3b-instruct",
+				--
+				-- ($0.02/$0.03)
+				model = "meta-llama/llama-3.1-8b-instruct",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
 			cerebras = {
 				url = "https://api.cerebras.ai/v1/chat/completions",
+				--
+				-- ($0.35/$0.75)(3000 tpm)
 				model = "gpt-oss-120b",
+				--
+				-- ($0.10/$0.10)(2200 tpm)
+				-- model = "llama3.1-8b",
 				api_key_name = "CEREBRAS_API_KEY",
 			},
 			groq = {
 				url = "https://api.groq.com/openai/v1/chat/completions",
-				model = "qwen/qwen3-32b",
+				--
+				-- ($0.05/$0.08)(840 tpm)
+				model = "llama-3.1-8b-instant",
+				--
+				-- ($0.075/$0.30)(1000 tpm)
+				model = "openai/gpt-oss-20b",
 				api_key_name = "GROQ_API_KEY",
 			},
-			oss = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "openai/gpt-oss-120b",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			gpt_5 = {
-				url = "https://api.openai.com/v1/chat/completions",
-				-- model = "gpt-5-mini",
-				model = "gpt-5-nano",
-				api_key_name = "OPENAI_API_KEY",
+			grok = {
+				url = "https://api.x.ai/v1/chat/completions",
+				--
+				-- ($0.20/$0.50)
+				model = "grok-4-1-fast-non-reasoning-latest",
+				api_key_name = "GROK_API_KEY",
 			},
 			openai = {
 				url = "https://api.openai.com/v1/chat/completions",
-				model = "gpt-4.1",
+				--
+				-- ($0.25/$2.00)
+				model = "gpt-5-mini",
+				--
+				-- ($1.25/$10.00)
+				-- model = "gpt-5.1",
 				api_key_name = "OPENAI_API_KEY",
 			},
-			sonoma_sky = {
+			gemini = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "openrouter/sonoma-sky-alpha",
+				-- ($2.00/$12.00)
+				model = "google/gemini-3-pro-preview",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
-			sonoma_dusk = {
+			flash = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "openrouter/sonoma-dusk-alpha",
+				-- ($0.30/$2.50)
+				model = "google/gemini-2.5-flash-preview-09-2025",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
-			kimi_k2 = {
+			flash_lite = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "moonshotai/kimi-k2-0905",
+				-- ($0.10/$0.40)
+				model = "google/gemini-2.5-flash-lite-preview-09-2025",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
-			openrouter = {
+			uncensored_ai = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "meta-llama/llama-3.2-1b-instruct",
+				model = "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
-			tiny_qwen3 = {
+			gemma = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "qwen/qwen3-4b:free",
+				model = "google/gemma-3-12b-it",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			mistral = {
+				url = "https://api.mistral.ai/v1/chat/completions",
+				model = "mistral-small-latest",
+				api_key_name = "MISTRAL_API_KEY",
+			},
+			oss = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "openai/gpt-oss-20b",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
 			qwen3 = {
@@ -76,56 +131,25 @@ return {
 				model = "deepseek/deepseek-r1-0528-qwen3-8b",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
-			r1_t2 = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "tngtech/deepseek-r1t2-chimera:free",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			tiny_llama = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "meta-llama/llama-3.2-1b-instruct",
-				-- model = "meta-llama/llama-3.2-3b-instruct",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			perplexity = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "perplexity/sonar-pro",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			grok = {
-				url = "https://api.x.ai/v1/chat/completions",
-				model = "grok-4-fast-non-reasoning",
-				api_key_name = "GROK_API_KEY",
-			},
 			deepcoder = {
 				url = "https://openrouter.ai/api/v1/chat/completions",
 				model = "agentica-org/deepcoder-14b-preview:free",
 				api_key_name = "OPENROUTER_API_KEY",
 			},
-			flash = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "google/gemini-2.5-flash",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			gemini = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "google/gemini-2.5-pro",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			gemma = {
-				url = "https://openrouter.ai/api/v1/chat/completions",
-				model = "google/gemma-3-12b-it",
-				api_key_name = "OPENROUTER_API_KEY",
-			},
-			mistral = {
-				url = "https://api.mistral.ai/v1/chat/completions",
-				model = "mistral-small-latest",
-				api_key_name = "MISTRAL_API_KEY",
-			},
 			ministral = {
 				url = "https://api.mistral.ai/v1/chat/completions",
 				model = "ministral-3b-latest",
 				api_key_name = "MISTRAL_API_KEY",
+			},
+			tiny_llama = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "meta-llama/llama-3.2-1b-instruct",
+				api_key_name = "OPENROUTER_API_KEY",
+			},
+			tiny_qwen3 = {
+				url = "https://openrouter.ai/api/v1/chat/completions",
+				model = "qwen/qwen3-4b:free",
+				api_key_name = "OPENROUTER_API_KEY",
 			},
 			devstral = {
 				url = "https://api.mistral.ai/v1/chat/completions",
@@ -146,11 +170,6 @@ return {
 				url = "https://openrouter.ai/api/v1/chat/completions",
 				model = "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
 				api_key_name = "OPENROUTER_API_KEY",
-			},
-			deepseek = {
-				url = "https://api.deepseek.com/v1/chat/completions",
-				model = "deepseek-chat",
-				api_key_name = "DEEPSEEK_API_KEY",
 			},
 			ollama_code = {
 				url = "http://10.0.0.103:11434/v1/chat/completions",
@@ -204,47 +223,44 @@ practice markdown syntax. Can you add a "TLDR" section that summarizes this vide
 narrative form? Can you add additional details that you know from your training but
 aren't mentioned and are important?
 ]]
+		--
+		--		local note_system_prompt = [[
+		--You are an AI assistant helping with note editing and formatting.
+		--Use the selected text as context.
+		--Follow the last instruction (last line with `>`) which is comments
+		--annotated with `>`.
+		--Perform the requested task precisely and concisely.
+		--Generate valid content only.
+		--- Focus on providing exactly what the user asks for, nothing more.
+		--- Do not include explanations, introductions, or additional content
+		--unless explicitly requested.
+		--- Do not include prefixes like `//` or comments in your response like for code and such
+		--- Keep responses brief and directly address the user's instruction.
+		--- If the topic is nuanced do include...
+		--]]
 
 		local note_system_prompt = [[
-You are an AI assistant helping with note editing and formatting.
-Use the selected text as context.
-Follow the last instruction (last line with `>`) which is comments
-annotated with `>`.
-Perform the requested task precisely and concisely.
-Generate valid content only.
-- Focus on providing exactly what the user asks for, nothing more.
-- Do not include explanations, introductions, or additional content
-unless explicitly requested.
-- Do not include prefixes like `//` or comments in your response.
-- Keep responses brief and directly address the user's instruction.
-]]
-
-		local perplexity_system_prompt = [[
-You are an AI assistant helping with note editing and formatting.
+You are an AI assistant helping with text (markdown, etc.)
+note editing and formatting.
 Use the selected text as context.
 Follow the last instruction (last line with `>`) which is comments
 annotated with `>`.
 
-Perform the requested task precisely and concisely.
-Generate valid content only.
-
-- Focus on providing exactly what the user asks for, nothing more.
-- Do not include explanations, introductions, or additional content
-unless explicitly requested.
-- Do not include prefixes like `//` or comments in your response.
-- Keep responses brief and directly address the user's instruction.
-
-Act as a knowledgeable AI assistant that integrates web search results using Perplexity.
-Respond to user queries as if you were a knowledgeable expert in the field, always
-providing sources for your claims. Conduct real-time web searches to gather relevant
-information and then aggregate the results into concise, structured, and informative
-answers that address the main points of the question. Engage in active listening,
-utilize chain-of-thought prompting, and provide inline citations and context for further
-exploration. Utilize fine-tuning and multiple examples to refine the results. Additionally,
-include a section of the relevant web sources cited at the end of each response,
-providing users with a list of credible sources for further reading. Finally,
-provide a section of related questions that users might have, along with brief answers
-to these questions, to facilitate deeper understanding and exploration of the topic.
+**Response Guidelines:**
+- For simple/definition questions (e.g., "What does X stand for?", "What is X?"):
+  - Answer concisely and directly with the exact definition or acronym meaning if that is what the query includes
+- For technical/nuanced questions (e.g., "What is X in Y context?", "How does X work?"):
+  - Provide detailed explanation with context, usage, and system-level details
+  - Cover practical applications and technical depth
+- For functional questions (e.g., "What does X do?"):
+  - Give concise primary function first
+  - Then offer: "Want specifics, implementation details, or deeper explanation?"
+- Detect question intent from phrasing, context, and topic complexity across any domain
+- Generate valid content only, precisely matching user request
+- No explanations or introductions unless requested
+- No prefixes like `//` for example: code comments in responses
+- Brief for simple, comprehensive for technical/nuanced
+- If context is formatted as markdown respond in best practice markdown syntax and structure
 ]]
 
 		local code_system_prompt = [[
@@ -731,6 +747,29 @@ transformed markdown.
 		-- =============================================================================
 		-- Keybindings
 		-- =============================================================================
+		--
+		-- Append Polaris Alpha response after selection
+		--
+		vim.keymap.set("v", "<leader>np", function()
+			llm.prompt_selection_only_append({
+				service = "polaris",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Polaris Alpha response after selection (notes)" })
+		--
+		-- Append Perplexity Deep Research response after selection
+		--
+		vim.keymap.set("v", "<leader>dr", function()
+			llm.prompt_selection_only_append({
+				service = "perplexity_deep_research",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Perplexity Deep Research response after selection (notes)" })
+		--
+		-- Append OpenAI response after selection
+		--
 		vim.keymap.set("v", "<leader>nt", function()
 			llm.prompt_selection_only_append({
 				service = "gpt_5",
@@ -739,13 +778,13 @@ transformed markdown.
 				verbosity = "medium",
 				reasoning_effort = "medium",
 			})
-		end, { desc = "Append GPT-5 Mini response after selection (notes)" })
+		end, { desc = "Append GPT-5 Nano response after selection (notes)" })
 		--
 		-- Append Gemini Flash response after selection
 		--
 		vim.keymap.set("v", "<leader>nf", function()
 			llm.prompt_selection_only_append({
-				service = "flash",
+				service = "flash_lite",
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
@@ -759,7 +798,7 @@ transformed markdown.
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
-		end, { desc = "Append Qwen3-4B response after selection (notes)" })
+		end, { desc = "Append Qwen3 30B A3B Thinking response after selection (notes)" })
 		--
 		-- Append Grok response after selection
 		--
@@ -769,7 +808,7 @@ transformed markdown.
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
-		end, { desc = "Append Grok 4 response after selection (notes)" })
+		end, { desc = "Append Grok 4 Fast Non-Reasoning response after selection (notes)" })
 		--
 		-- Append Gemini Response after selection
 		vim.keymap.set("v", "<leader>ng", function()
@@ -794,11 +833,11 @@ transformed markdown.
 		--
 		vim.keymap.set("v", "<leader>nd", function()
 			llm.prompt_selection_only_append({
-				service = "r1",
+				service = "deepseek",
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
-		end, { desc = "Append Deepseek R1 (Qwen3 8B) response after selection" })
+		end, { desc = "Append DeepSeek-V3.2 response after selection" })
 		--
 		-- Append OpenRouter response after selection
 		--
@@ -808,7 +847,16 @@ transformed markdown.
 				system_prompt = note_system_prompt,
 				temperature = 0.75,
 			})
-		end, { desc = "Append OpenRouter (OSS 20B) response after selection (notes)" })
+		end, { desc = "Append OpenRouter Llama 3.2 3B response after selection (notes)" })
+		--
+		-- Append OSS 20B response after selection
+		vim.keymap.set("v", "<leader>too", function()
+			llm.prompt_selection_only_append({
+				service = "oss_20b",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append OSS 20B response after visual selection" })
 		--
 		-- Append Tiny Llama response after selection
 		vim.keymap.set("v", "<leader>tlm", function()
@@ -819,16 +867,6 @@ transformed markdown.
 			})
 		end, { desc = "Append Llama 3.2 1B response after visual selection" })
 		--
-		-- Append Sonoma Dusk
-		--
-		vim.keymap.set("v", "<leader>tsd", function()
-			llm.prompt_selection_only_append({
-				service = "sonoma_dusk",
-				system_prompt = note_system_prompt,
-				temperature = 0.75,
-			})
-		end, { desc = "Append Sonoma Dusk response after selection (notes)" })
-		--
 		-- Append Tiny LLM response after selection
 		vim.keymap.set("v", "<leader>tqw", function()
 			llm.prompt_selection_only_append({
@@ -837,15 +875,6 @@ transformed markdown.
 				temperature = 0.75,
 			})
 		end, { desc = "Append Tiny LLM (Qwen3-4B) response after selection (notes)" })
-		--
-		-- Append Kimi K2 response after selection
-		vim.keymap.set("v", "<leader>tkk", function()
-			llm.prompt_selection_only_append({
-				service = "kimi_k2",
-				system_prompt = note_system_prompt,
-				temperature = 0.75,
-			})
-		end, { desc = "Append Kimi K2 response after selection (notes)" })
 		--
 		-- Append AI response after selection
 		vim.keymap.set("v", "<leader>tmi", function()
@@ -866,15 +895,6 @@ transformed markdown.
 		end, { desc = "Append Mistral Nemo response after visual selection" })
 		--
 		-- Append AI response after selection
-		vim.keymap.set("v", "<leader>tlm", function()
-			llm.prompt_selection_only_append({
-				service = "tiny_llama",
-				system_prompt = note_system_prompt,
-				temperature = 0.75,
-			})
-		end, { desc = "Append Llama 3.2 3B response after visual selection" })
-		--
-		-- Append AI response after selection
 		vim.keymap.set("v", "<leader>tdv", function()
 			llm.prompt_selection_only_append({
 				service = "devstral",
@@ -891,16 +911,6 @@ transformed markdown.
 				temperature = 0.75,
 			})
 		end, { desc = "Append Codestral 22B response after visual selection" })
-		--
-		-- Append AI response after selection
-		vim.keymap.set("v", "<leader>trt", function()
-			llm.prompt_selection_only_append({
-				service = "r1_t2",
-				system_prompt = note_system_prompt,
-				temperature = 0.75,
-			})
-		end, { desc = "Append R1T2 Chimera response after visual selection" })
-		--
 		--
 		-- Append Mistral response after selection
 		vim.keymap.set("v", "<leader>nm", function()
@@ -945,6 +955,8 @@ transformed markdown.
 			})
 		end, { desc = "Append Groq (Qwen3-32B) response after selection (notes)" })
 		--
+		-- Append Z Ai response after selection
+		--
 		vim.keymap.set("v", "<leader>nz", function()
 			llm.prompt_selection_only_append({
 				service = "z_ai",
@@ -952,6 +964,17 @@ transformed markdown.
 				temperature = 0.75,
 			})
 		end, { desc = "Append Z AI (GLM 4 Flash) response after selection (notes)" })
+		--
+		-- Append Uncensored Ai response after selection
+		--
+		vim.keymap.set("v", "<leader>nx", function()
+			llm.prompt_selection_only_append({
+				service = "uncensored_ai",
+				system_prompt = note_system_prompt,
+				temperature = 0.75,
+			})
+		end, { desc = "Append Uncensored AI response after selection (notes)" })
+		--
 		--
 		-- Replace selection with LLM response
 		--
@@ -995,7 +1018,7 @@ transformed markdown.
 		-- Generate a title, subtitle, and spiel
 		vim.keymap.set("v", "<leader>mt", function()
 			llm.prompt_selection_only_append({
-				service = "flash",
+				service = "flash_lite",
 				system_prompt = title_spiel_prompt,
 				temperature = 0.6,
 			})
@@ -1030,7 +1053,7 @@ transformed markdown.
 		vim.keymap.set("v", "<leader>msf", function()
 			llm.prompt_selection_only({
 				replace = true,
-				service = "flash",
+				service = "flash_lite",
 				system_prompt = clean_scraped_markdown_prompt,
 				temperature = 0.6,
 			})

@@ -3,8 +3,8 @@ return {
 	version = "*",
 	lazy = true,
 	event = {
-		"BufReadPre /home/dusts/aston/Notes/Obsidian/aston/**/*.md",
-		"BufNewFile /home/dusts/aston/Notes/Obsidian/aston/**/*.md",
+		"BufReadPre /Users/dusts/aston/Notes/Obsidian/aston/**/*.md",
+		"BufNewFile /Users/dusts/aston/Notes/Obsidian/aston/**/*.md",
 	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
@@ -14,7 +14,7 @@ return {
 		workspaces = {
 			{
 				name = "work",
-				path = "/home/dusts/aston/Notes/Obsidian/aston",
+				path = "/Users/dusts/aston/Notes/Obsidian/aston",
 			},
 		},
 		note_frontmatter_func = function(note)

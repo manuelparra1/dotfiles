@@ -12,4 +12,18 @@ return {
 		--   If not available, we use `mini` as the fallback
 		"rcarriga/nvim-notify",
 	},
+
+	require("noice").setup({
+		routes = {
+			-- Force show "recording @" messages in the Noice commandline
+			{
+				filter = {
+					event = "msg_show",
+					kind = "",
+					find = "recording @",
+				},
+				view = "cmdline", -- or "notify" if you want a popup
+			},
+		},
+	}),
 }
