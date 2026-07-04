@@ -4,21 +4,20 @@
 # and its subdirectories into a single file called output.md.
 # It adds separator lines between each file's contents.
 
+set -euo pipefail
+
 output_file="output.md"
+tmp="$(mktemp)"
 
-# Initialize the output file
-echo "# Combined Markdown Files" > "$output_file"
-echo "" >> "$output_file"
+printf "# Combined Markdown Files\n\n" > "$tmp"
 
-# Find all markdown files and process them
-find . -type f -name "*.md" -print0 | while IFS= read -r -d '' file; do
-  # Output separator lines and file name to output.md
-  echo "## \`${file#./}\`" >> "$output_file"
-  echo "---" >> "$output_file"
+# -not -name prevents the feedback loop
+find . -type f -name "*.md" -not -name "$output_file" -print0 |
+  sort -z |
+  while IFS= read -r -d '' file; do
+    printf '## `%s`\n---\n```markdown\n' "${file#./}" >> "$tmp"
+    cat "$file" >> "$tmp"
+    printf '\n```\n\n' >> "$tmp"
+  done
 
-  # Output contents of each file, wrapped in ```markdown
-  echo '```markdown' >> "$output_file"
-  cat "$file" >> "$output_file"
-  echo '```' >> "$output_file"
-  echo "" >> "$output_file"
-done
+mv "$tmp" "$output_file"
