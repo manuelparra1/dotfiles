@@ -1,0 +1,887 @@
+/**
+ * Typora Theme: Google Sans Flex Modern (Static Local Edition)
+ * Uses exclusively Google Sans Flex and Google Sans Code
+ */
+
+/* ==========================================================================
+   1. Local Font Mapping (Static Asset Binding)
+   ========================================================================== */
+
+/* Google Sans Flex Body & Interface Weights */
+@font-face {
+    font-family: 'Google Sans Flex';
+    font-style: normal;
+    font-weight: 300;
+    src: url('./google-sans-flex/GoogleSansFlex_24pt-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Flex';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./google-sans-flex/GoogleSansFlex_24pt-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Flex';
+    font-style: normal;
+    font-weight: 500;
+    src: url('./google-sans-flex/GoogleSansFlex_24pt-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Flex';
+    font-style: normal;
+    font-weight: 600;
+    src: url('./google-sans-flex/GoogleSansFlex_24pt-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Flex';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./google-sans-flex/GoogleSansFlex_24pt-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Flex';
+    font-style: normal;
+    font-weight: 800;
+    src: url('./google-sans-flex/GoogleSansFlex_36pt-Black.ttf') format('truetype');
+}
+
+/* Google Sans Code Monospace Mapping */
+@font-face {
+    font-family: 'Google Sans Code';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./google-sans-flex/GoogleSansCode-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Code';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./google-sans-flex/GoogleSansCode-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Code';
+    font-style: italic;
+    font-weight: 400;
+    src: url('./google-sans-flex/GoogleSansCode-Italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Google Sans Code';
+    font-style: italic;
+    font-weight: 700;
+    src: url('./google-sans-flex/GoogleSansCode-BoldItalic.ttf') format('truetype');
+}
+
+:root {
+    /* Vercel-Style Syntax & Core Color Scheme */
+    --v-white-100: #ffffff;
+    --v-white-200: #fafafa;
+    --v-gray-1000: #171717;
+    --v-gray-900: #666666;
+    --v-gray-800: #7d7d7d;
+    --v-gray-700: #8f8f8f;
+    --v-gray-600: #a8a8a8;
+    --v-gray-500: #c9c9c9;
+    --v-gray-400: #eaeaea;
+    --v-gray-200: #f5f5f5;
+    --v-background: #25273a;
+
+    --control-text-color: var(--v-gray-800);
+    --monospace: "Google Sans Code", monospace;
+}
+
+/* ==========================================================================
+   2. Document Container & Exact Body Layout
+   ========================================================================== */
+
+body {
+    font-family: "Google Sans Flex", -apple-system, sans-serif;
+    font-size: 24px;
+    box-sizing: border-box;
+    background-color: var(--v-white-100);
+}
+
+#write {
+    max-width: 65ch;
+    margin: 0 auto;
+    padding: 2rem 2.5rem 4rem;
+    color: #242424;
+}
+
+/* Precise Body Type Styling requested from image */
+p,
+li {
+    font-family: "Google Sans Flex", sans-serif;
+    font-weight: 400;
+    /* Maps directly to 24pt-Regular */
+    font-size: 1.15rem;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    word-spacing: 0.06em;
+    /* Adds a clean, subtle breathe between words */
+    margin-bottom: 1.25rem;
+}
+
+strong,
+b {
+    font-weight: 500;
+    /* Maps directly to 24pt-Bold */
+    color: #111111;
+}
+
+a {
+    color: #0072f5;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+}
+
+a:hover {
+    border-bottom-color: #0072f5;
+}
+
+/* ==========================================================================
+   Blockquotes: Callouts & Admonitions (CSS Grid Layout)
+   ========================================================================== */
+
+/* 1. Default Blockquote (The "For Dummies" Note) */
+blockquote {
+    display: grid;
+    /* 45px fixed column for the SVG, 1fr (the rest of the space) for text */
+    grid-template-columns: 45px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    /* Keeps the icon pinned to the top left */
+
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+
+    font-style: normal;
+    /* Removes the old italic */
+    color: var(--v-gray-1000);
+    background-color: var(--v-gray-200);
+    border-left: 4px solid #FFEB3B;
+    /* Dummies Yellow */
+    border-radius: 0 6px 6px 0;
+}
+
+/* Inject the Default "For Dummies" Logo */
+blockquote::before {
+    content: "";
+    display: block;
+    width: 45px;
+    height: 45px;
+    background-image: url('./google-sans-flex/for_dummies_head.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+    margin-top: 2px;
+    /* Slight nudge to perfectly align with the text cap height */
+}
+
+/* Clean up paragraph spacing inside the grid */
+blockquote p {
+    margin: 0 0 0.75rem 0;
+}
+
+blockquote p:last-child {
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. The Custom ??> Blockquote (Triggered by invisible #q anchor)
+   -------------------------------------------------------------------------- */
+
+blockquote:has(a[href="#q"]) {
+    border-left-color: #0072f5;
+    background-color: rgba(0, 114, 245, 0.05);
+}
+
+/* Swap the icon */
+blockquote:has(a[href="#q"])::before {
+    background-image: url('./google-sans-flex/question.svg');
+}
+
+/* Hard-hide the invisible anchor just to be completely safe */
+blockquote a[href="#q"] {
+    display: none !important;
+}
+
+/* Force all text elements (paragraphs, lists, code blocks) into the wider 1fr column */
+blockquote>* {
+    grid-column: 2;
+}
+
+/* ==========================================================================
+   3. Custom Headings Hierarchy
+   ========================================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Google Sans Flex", sans-serif;
+    color: #111111;
+    letter-spacing: -0.02em;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-transform: none;
+
+    color: #ffffff;
+    background-color: #111111;
+
+    /* Flexbox natively stacks the text and the injected logo, centering both */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    /* This completely replaces the need for <br> */
+
+    width: 100%;
+    box-sizing: border-box;
+    margin: 3rem 0 3.5rem 0;
+    padding: 1.25rem 2rem;
+    text-align: center;
+
+    -webkit-transform: rotate(-3deg);
+    transform: rotate(-3deg);
+
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Inject the SVG directly from the theme folder */
+h1::after {
+    content: "";
+    display: block;
+
+    /* Adjust these dimensions to match your specific SVG's aspect ratio */
+    width: 180px;
+    height: 45px;
+
+    /* Piggybacks on your existing Vimscript path patching */
+    background-image: url('./google-sans-flex/logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+h2 {
+    font-size: 1.85rem;
+    font-weight: 400;
+    /* Maps to 24pt-Bold */
+    line-height: 1.25;
+    margin-top: 1.75rem;
+}
+
+/* Exact Heading 3 specifications requested */
+h3 {
+    font-size: 1.40rem;
+    line-height: 1.3;
+    font-weight: 415;
+    /* Maps directly to 24pt-SemiBold */
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 300;
+    /* Maps to 24pt-Medium */
+    line-height: 1.4;
+}
+
+h5,
+h6 {
+    font-size: 1.125rem;
+    font-weight: 250;
+    color: var(--v-gray-900);
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   4. Clean Modern Table Layout Override
+   ========================================================================== */
+
+table {
+    width: 100%;
+    margin: 2rem 0;
+    font-size: 1rem;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid var(--v-gray-400);
+    border-radius: 6px;
+    overflow: hidden;
+    table-layout: fixed;
+}
+
+table th,
+table td {
+    padding: 12px 16px;
+    text-align: left;
+    line-height: 1.5;
+    width: auto;
+}
+
+table th {
+    font-weight: 600;
+    color: #111111;
+    background-color: var(--v-white-200);
+    border-bottom: 2px solid var(--v-gray-400);
+}
+
+table td {
+    font-weight: 400;
+    border-bottom: 1px solid var(--v-gray-400);
+    color: #333333;
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+table tr:nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+.ty-table-edit {
+    background: var(--v-gray-400);
+}
+
+
+/* ==========================================================================
+   5. Terminal Style Code Fences (Dual Engine Support)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PART A: TYPORA ENGINE (CodeMirror)
+   Maintains your original Vercel-style colors inside the Typora app
+   -------------------------------------------------------------------------- */
+
+/* Typora Inline Code: Strictly targeted to text elements to protect blocks */
+#write p code,
+#write li code,
+#write table code,
+#write blockquote code,
+#write h1 code,
+#write h2 code,
+#write h3 code,
+#write h4 code,
+#write h5 code,
+#write h6 code {
+    padding: 3px 6px;
+    font-family: var(--monospace);
+    font-size: 0.9rem;
+    background-color: var(--v-gray-200);
+    border: 1px solid var(--v-gray-400);
+    border-radius: 4px;
+    color: #e5484d;
+    margin: 0 2px;
+}
+
+.md-fences {
+    position: relative;
+    padding-top: 38px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 12px !important;
+    background-color: var(--v-background) !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-family: var(--monospace) !important;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.md-fences::before {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    content: "";
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ff5f56;
+    box-shadow: 20px 0px #ffbd2e, 40px 0px #27c93f;
+    z-index: 10;
+}
+
+#write .CodeMirror {
+    font-family: var(--monospace);
+    font-size: 0.92rem;
+    color: var(--v-gray-400);
+    line-height: 1.6;
+}
+
+.CodeMirror-gutters {
+    border-right: none !important;
+    background-color: var(--v-background) !important;
+}
+
+#write .CodeMirror-cursors .CodeMirror-cursor {
+    border-left: 2px solid #52aeff !important;
+}
+
+.cm-s-inner .CodeMirror-selected,
+.cm-s-typora-default .CodeMirror-selected {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.cm-comment {
+    color: #7d7d7d !important;
+    font-style: italic;
+}
+
+.cm-string {
+    color: #45a557 !important;
+}
+
+.cm-variable {
+    color: #eaeaea !important;
+}
+
+.cm-variable-2 {
+    color: #f5b047 !important;
+}
+
+.cm-keyword {
+    color: #8e4ec6 !important;
+    font-weight: 700;
+}
+
+.cm-number {
+    color: #f5b047 !important;
+}
+
+.cm-operator {
+    color: #52aeff !important;
+}
+
+.cm-builtin {
+    color: #52aeff !important;
+}
+
+.cm-property {
+    color: #a8a8a8 !important;
+}
+
+.cm-header {
+    color: #52aeff !important;
+}
+
+/* --------------------------------------------------------------------------
+   PART B: PANDOC ENGINE (Skylighting / Vim Preview)
+   Uses .PANDOC_TARGET (Ignored by Typora, activated by Vimscript)
+   -------------------------------------------------------------------------- */
+
+/* Pandoc Inline Code */
+.PANDOC_TARGET p code,
+.PANDOC_TARGET li code,
+.PANDOC_TARGET table code,
+.PANDOC_TARGET blockquote code,
+.PANDOC_TARGET h1 code,
+.PANDOC_TARGET h2 code,
+.PANDOC_TARGET h3 code,
+.PANDOC_TARGET h4 code,
+.PANDOC_TARGET h5 code,
+.PANDOC_TARGET h6 code {
+    padding: 3px 6px;
+    font-family: var(--monospace);
+    font-size: 0.9rem;
+    background-color: #313244 !important;
+    border-radius: 4px !important;
+    color: #f38ba8 !important;
+    margin: 0 2px !important;
+    border: none !important;
+}
+
+/* Pandoc Block Containers (Labeled & Unlabeled) */
+.PANDOC_TARGET div.sourceCode,
+.PANDOC_TARGET pre:not(.sourceCode) {
+    position: relative;
+    padding-top: 38px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 12px !important;
+    background-color: #1e1e2e !important;
+    border-radius: 8px !important;
+    font-family: var(--monospace) !important;
+    font-size: 0.9rem !important;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow-x: auto;
+}
+
+/* Mac Traffic Lights (Typo Fixed) */
+.PANDOC_TARGET div.sourceCode::before,
+.PANDOC_TARGET pre:not(.sourceCode)::before {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    content: "";
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ff5f56;
+    box-shadow: 20px 0px #ffbd2e, 40px 0px #27c93f;
+    z-index: 10;
+}
+
+/* Reset Pandoc's inner <pre> inside div.sourceCode */
+.PANDOC_TARGET div.sourceCode pre {
+    margin: 0;
+    line-height: 1.6;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Strip inline styles from code INSIDE blocks to stop nested styling */
+.PANDOC_TARGET div.sourceCode code,
+.PANDOC_TARGET pre:not(.sourceCode) code {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    color: #cdd6f4 !important;
+}
+
+/* Mocha Syntax Highlighting mapped to Pandoc */
+.PANDOC_TARGET code.sourceCode span {
+    color: #cdd6f4 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.al {
+    color: #f38ba8 !important;
+    font-weight: bold !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.an {
+    color: #eba0ac !important;
+    font-style: italic !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.at {
+    color: #b4befe !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.bn {
+    color: #fab387 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.bu {
+    color: #89b4fa !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.cf {
+    color: #cba6f7 !important;
+    font-weight: bold !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.ch {
+    color: #a6e3a1 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.cn {
+    color: #fab387 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.co {
+    color: #6c7086 !important;
+    font-style: italic !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.cv {
+    color: #eba0ac !important;
+    font-style: italic !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.do {
+    color: #6c7086 !important;
+    font-style: italic !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.dt {
+    color: #f9e2af !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.dv {
+    color: #fab387 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.er {
+    color: #f38ba8 !important;
+    text-decoration: underline !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.ex {
+    color: #89b4fa !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.fl {
+    color: #fab387 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.fu {
+    color: #89b4fa !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.im {
+    color: #cba6f7 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.in {
+    color: #6c7086 !important;
+    font-style: italic !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.kw {
+    color: #cba6f7 !important;
+    font-weight: bold !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.op {
+    color: #89dceb !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.ot {
+    color: #94e2d5 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.pp {
+    color: #f5c2e7 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.re {
+    color: #b4befe !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.sc {
+    color: #a6e3a1 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.ss {
+    color: #a6e3a1 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.st {
+    color: #a6e3a1 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.va {
+    color: #f5e0dc !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.vs {
+    color: #a6e3a1 !important;
+}
+
+.PANDOC_TARGET code.sourceCode span.wa {
+    color: #f9e2af !important;
+    font-style: italic !important;
+}
+
+/* ==========================================================================
+   6. Work Environment Interactivity & Focus Fixes
+   ========================================================================== */
+
+.task-list {
+    padding-left: 0;
+}
+
+.md-task-list-item {
+    padding-left: 30px;
+}
+
+.md-task-list-item>input {
+    width: 1.15rem;
+    height: 1.15rem;
+    display: block;
+    -webkit-appearance: initial;
+    margin-left: -1.5em;
+    margin-top: 4px;
+    border: none;
+}
+
+.md-task-list-item>input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.md-task-list-item>input:before {
+    border: 1px solid var(--v-gray-800);
+    border-radius: 4px;
+    width: 1.15rem;
+    height: 1.15rem;
+    background: #fff;
+    content: ' ';
+    display: block;
+}
+
+.md-task-list-item>input:checked:before {
+    background: var(--v-gray-1000);
+    border-color: var(--v-gray-1000);
+}
+
+.md-task-list-item>input:after {
+    position: absolute;
+    top: 7px;
+    left: 4px;
+    width: 7px;
+    height: 4px;
+    border: 2px solid #fff;
+    border-top: 0;
+    border-right: 0;
+    content: ' ';
+    transform: rotate(-45deg);
+    opacity: 0;
+}
+
+.md-task-list-item>input:checked:after {
+    opacity: 1;
+}
+
+.on-focus-mode .md-end-block:not(.md-focus):not(.md-focus-container)>* {
+    color: var(--v-gray-600) !important;
+}
+
+.on-focus-mode .md-fences .CodeMirror-activeline-background {
+    background: transparent !important;
+}
+
+#typora-sidebar {
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: 0.95rem !important;
+    background-color: var(--v-white-200);
+}
+
+.outline-item {
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   7. PDF Export & Print Optimization
+   ========================================================================== */
+@media print {
+    body {
+        font-size: 14px !important;
+        /* Resets the baseline scaling for paper */
+    }
+
+    #write {
+        padding-top: 0 !important;
+        /* Eliminates the giant top gap */
+        padding-bottom: 0 !important;
+        max-width: 100% !important;
+    }
+
+    /* Prevents the first heading from pushing itself down the page */
+    #write>h1:first-child,
+    #write>h2:first-child,
+    #write>p:first-child {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   8. Model Reasoning (<think> Tags) Collapsible
+   ========================================================================== */
+
+details.think-block {
+    background-color: var(--v-gray-200);
+    /* Uses your theme's slight gray */
+    border: 1px solid var(--v-gray-400);
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+
+    font-size: 0.8rem;
+    /* Slightly smaller text as requested */
+    color: var(--v-gray-900);
+    line-height: 1.5;
+}
+
+/* The clickable header */
+details.think-block summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--v-gray-800);
+    outline: none;
+    user-select: none;
+    list-style: none;
+    /* Hides the ugly default browser triangle */
+
+    /* Negative margins stretch the clickable area to the edges of the box */
+    margin: -0.5rem -1rem;
+    padding: 0.75rem 1rem;
+    transition: background-color 0.15s ease;
+}
+
+/* Hover effect for the clickable bar */
+details.think-block summary:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Custom animated triangle arrow */
+details.think-block summary::before {
+    content: "▶";
+    display: inline-block;
+    font-size: 0.7rem;
+    margin-right: 0.6rem;
+    color: var(--v-gray-600);
+    transition: transform 0.2s ease;
+}
+
+/* Rotates the arrow pointing down when open */
+details[open].think-block summary::before {
+    transform: rotate(90deg);
+}
+
+/* Adds a clean divider line between the header and the text when opened */
+details[open].think-block summary {
+    border-bottom: 1px solid var(--v-gray-400);
+    margin-bottom: 0.75rem;
+}
+
+/* Hard-hides the default webkit arrow just in case */
+details.think-block summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Specifically target the text/paragraphs inside the reasoning block */
+#write details.think-block p,
+#write details.think-block ul,
+#write details.think-block li,
+.PANDOC_TARGET details.think-block p,
+.PANDOC_TARGET details.think-block ul,
+.PANDOC_TARGET details.think-block li {
+    font-size: 0.85rem;
+    /* Adjust this to make the reasoning text smaller/larger */
+    line-height: 1.4;
+    color: var(--v-gray-800);
+    /* Slightly fades the text to differentiate it */
+    margin-bottom: 0.75rem;
+}
+
+/* Removes the bottom margin from the very last paragraph so it doesn't leave awkward empty space */
+#write details.think-block p:last-child,
+.PANDOC_TARGET details.think-block p:last-child {
+    margin-bottom: 0;
+}
